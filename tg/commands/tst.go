@@ -1,6 +1,6 @@
 package commands
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 func (o *Commander) Tst(inputMessage *tgbotapi.Message) {
 	//
