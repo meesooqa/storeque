@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"log/slog"
 	"os"
 
@@ -55,8 +54,6 @@ func load(fname string) (res *AppConfig, err error) {
 	if err := yaml.Unmarshal(data, res); err != nil {
 		return nil, err
 	}
-
-	log.Printf("LogConfig: %+v", res.Log)
 
 	level, ok := logLevelMap[res.Log.LevelCode]
 	if ok {
