@@ -1,0 +1,14 @@
+system:
+  key1: "value1"
+log:
+  level_code: "debug"
+  output_format: "text"
+  path: "var/log/botpass.log"
+db:
+  is_debug_mode: false
+  host: "localhost"
+  port: 1234
+  sslmode: "disable"
+  user: "admin"
+  password: "adminpw"
+  dbname: "app_db"
