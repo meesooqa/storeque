@@ -27,7 +27,7 @@ func (o *HelpHandler) GetName() string {
 }
 
 func (o *HelpHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize("TgCmdHelpDescription", nil)
+	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *HelpHandler) SetAvailableCommands(availableCommands []CommandHandler) {

@@ -7,6 +7,7 @@ import (
 	"tg-star-shop-bot-001/common/common_log"
 	"tg-star-shop-bot-001/common/config"
 	"tg-star-shop-bot-001/common/lang"
+	_ "tg-star-shop-bot-001/tg"
 )
 
 type AppDeps struct {
@@ -26,9 +27,11 @@ func NewAppDeps() *AppDeps {
 	logger, cleanup := lp.GetLogger()
 	defer cleanup()
 
+	loc := lang.NewLang("en")
+
 	return &AppDeps{
 		Config: conf,
 		Logger: logger,
-		Lang:   lang.NewLang("en"),
+		Lang:   loc,
 	}
 }

@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"fmt"
+
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
@@ -24,7 +26,7 @@ func (o *StartHandler) GetName() string {
 }
 
 func (o *StartHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize("TgCmdStartDescription", nil)
+	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {

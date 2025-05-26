@@ -26,7 +26,7 @@ func (o *DiceHandler) GetName() string {
 }
 
 func (o *DiceHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize("TgCmdDiceDescription", nil)
+	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *DiceHandler) Handle(inputMessage *tgbotapi.Message) {

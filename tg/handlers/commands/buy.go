@@ -23,11 +23,11 @@ func NewBuyHandler(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) *BuyHandler {
 }
 
 func (o *BuyHandler) GetName() string {
-	return "pay"
+	return "buy"
 }
 
 func (o *BuyHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize("TgCmdBuyDescription", nil)
+	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *BuyHandler) Handle(inputMessage *tgbotapi.Message) {
