@@ -14,7 +14,7 @@ func main() {
 	godotenv.Load()
 
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
-	// bot, err := tgbotapi.NewBotAPI(token)
+	// TODO bot, err := tgbotapi.NewBotAPI(token)
 	bot, err := tgbotapi.NewBotAPIWithAPIEndpoint(token, "https://api.telegram.org/bot%s/test/%s")
 	if err != nil {
 		log.Panic(err)
