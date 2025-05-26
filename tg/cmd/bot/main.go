@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"os"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
@@ -15,16 +16,22 @@ func main() {
 	appDeps := app.NewAppDeps()
 
 	godotenv.Load()
-
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
-	// TODO bot, err := tgbotapi.NewBotAPI(token)
-	bot, err := tgbotapi.NewBotAPIWithAPIEndpoint(token, "https://api.telegram.org/bot%s/test/%s")
+	apiEndpoint := os.Getenv("TELEGRAM_API_ENDPOINT")
+
+	var err error
+	var bot *tgbotapi.BotAPI
+	if apiEndpoint == "" {
+		bot, err = tgbotapi.NewBotAPI(token)
+	} else {
+		bot, err = tgbotapi.NewBotAPIWithAPIEndpoint(token, apiEndpoint)
+	}
 	if err != nil {
+		// appDeps.Logger.Error("NewBot", slog.Any("err", err))
 		log.Fatal(err)
 	}
 	// bot.Debug = true
-
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	appDeps.Logger.Info("Authorized", slog.String("Account", bot.Self.UserName))
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
