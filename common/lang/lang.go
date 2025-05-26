@@ -19,6 +19,7 @@ type Localization interface {
 }
 
 type Lang struct {
+	LangTag   string
 	logger    *slog.Logger
 	localizer *i18n.Localizer
 }
@@ -32,6 +33,7 @@ func NewLang(logger *slog.Logger, langTag string) *Lang {
 	}
 
 	return &Lang{
+		LangTag:   langTag,
 		logger:    logger,
 		localizer: i18n.NewLocalizer(bundle, langTag),
 	}
