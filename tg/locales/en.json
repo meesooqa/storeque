@@ -1,4 +1,6 @@
 {
+  "tg.cmd.start.description": "Show Main Menu.",
+  "tg.cmd.help.description": "Show this help.",
   "tg.cmd.dice.description": "Send a random dice roll.",
   "tg.cmd.buy.description": "Buy a product."
 }
