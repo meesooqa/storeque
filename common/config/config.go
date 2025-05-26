@@ -16,13 +16,15 @@ var logLevelMap = map[string]slog.Level{
 
 // AppConfig from config yml
 type AppConfig struct {
-	//System *SystemConfig `yaml:"system"`
-	Log *LogConfig `yaml:"log"`
-	DB  *DbConfig  `yaml:"db"`
+	System *SystemConfig `yaml:"system"`
+	Log    *LogConfig    `yaml:"log"`
+	DB     *DbConfig     `yaml:"db"`
 }
 
 // SystemConfig - system parameters
-// type SystemConfig struct {}
+type SystemConfig struct {
+	DefaultLangTag string `yaml:"default_lang_tag"`
+}
 
 // LogConfig - log parameters
 type LogConfig struct {

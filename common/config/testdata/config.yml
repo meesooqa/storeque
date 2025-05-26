@@ -1,5 +1,5 @@
 system:
-  key1: "value1"
+  default_lang_tag: "ru"
 log:
   level_code: "debug"
   output_format: "json"

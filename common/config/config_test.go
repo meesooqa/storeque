@@ -13,7 +13,8 @@ func TestLoad(t *testing.T) {
 
 	require.NoError(t, err)
 
-	//assert.IsType(t, &SystemConfig{}, c.System)
+	assert.IsType(t, &SystemConfig{}, c.System)
+	assert.Equal(t, "ru", c.System.DefaultLangTag)
 
 	assert.IsType(t, &LogConfig{}, c.Log)
 	assert.Equal(t, "debug", c.Log.LevelCode)

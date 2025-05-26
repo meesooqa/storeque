@@ -27,7 +27,7 @@ func NewAppDeps() *AppDeps {
 	logger, cleanup := lp.GetLogger()
 	defer cleanup()
 
-	loc := lang.NewLang("en")
+	loc := lang.NewLang(logger, conf.System.DefaultLangTag)
 
 	return &AppDeps{
 		Config: conf,

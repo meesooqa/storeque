@@ -2,7 +2,7 @@ package lang
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -19,10 +19,11 @@ type Localization interface {
 }
 
 type Lang struct {
+	logger    *slog.Logger
 	localizer *i18n.Localizer
 }
 
-func NewLang(langTag string) *Lang {
+func NewLang(logger *slog.Logger, langTag string) *Lang {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 
@@ -31,6 +32,7 @@ func NewLang(langTag string) *Lang {
 	}
 
 	return &Lang{
+		logger:    logger,
 		localizer: i18n.NewLocalizer(bundle, langTag),
 	}
 }
@@ -41,7 +43,7 @@ func (o *Lang) Localize(id string, tmplData map[string]string) string {
 		TemplateData: tmplData,
 	})
 	if err != nil {
-		log.Println("i18n error:", err)
+		o.logger.Error("i18n error", slog.Any("err", err))
 		text = id
 	}
 	return text
