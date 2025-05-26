@@ -3,7 +3,7 @@ system:
 log:
   level_code: "debug"
   output_format: "text"
-  path: "var/log/botpass.log"
+  path: "var/log/app.log"
 db:
   is_debug_mode: false
   host: "localhost"
