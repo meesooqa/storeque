@@ -5,10 +5,11 @@ log:
   output_format: "text"
   path: "var/log/app.log"
 db:
-  is_debug_mode: false
   host: "localhost"
-  port: 1234
+  #  host: "postgres"
+  port: 5432
   sslmode: "disable"
-  user: "admin"
-  password: "adminpw"
-  dbname: "app_db"
+  user: "user"
+  password: "password"
+  dbname: "ssbot_db"
+  is_debug_mode: false
