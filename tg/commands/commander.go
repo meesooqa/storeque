@@ -32,6 +32,8 @@ func (o *Commander) HandleUpdate(update tgbotapi.Update) {
 		o.Start(update.Message)
 	case "test":
 		o.Tst(update.Message)
+	case "dice":
+		o.Dice(update.Message)
 	default:
 		o.Default(update.Message)
 	}
