@@ -1,0 +1,1 @@
+DELETE FROM roles WHERE name IN ('admin','editor','manager','customer');
