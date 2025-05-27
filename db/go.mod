@@ -5,7 +5,6 @@ go 1.24.1
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.3
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/tools v0.26.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.30.0
