@@ -6,7 +6,6 @@ import (
 	"os"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
-	"github.com/joho/godotenv"
 
 	"tg-star-shop-bot-001/common/app"
 	"tg-star-shop-bot-001/tg/handlers"
@@ -15,7 +14,6 @@ import (
 func main() {
 	appDeps := app.NewAppDeps()
 
-	godotenv.Load()
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
 	apiEndpoint := os.Getenv("TELEGRAM_API_ENDPOINT")
 
