@@ -21,15 +21,6 @@ func TestLoad(t *testing.T) {
 	assert.Equal(t, slog.LevelDebug, c.Log.Level)
 	assert.Equal(t, "json", c.Log.OutputFormat)
 	assert.Equal(t, "var/log/app.log.json", c.Log.Path)
-
-	assert.IsType(t, &DbConfig{}, c.DB)
-	assert.Equal(t, false, c.DB.IsDebugMode)
-	assert.Equal(t, "localhost", c.DB.Host)
-	assert.Equal(t, 1234, c.DB.Port)
-	assert.Equal(t, "disable", c.DB.SslMode)
-	assert.Equal(t, "admin", c.DB.User)
-	assert.Equal(t, "adminpw", c.DB.Password)
-	assert.Equal(t, "app_db", c.DB.DbName)
 }
 
 func TestLoadConfigNotFoundFile(t *testing.T) {

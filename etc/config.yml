@@ -4,12 +4,3 @@ log:
   level_code: "debug"
   output_format: "text"
   path: "var/log/app.log"
-db:
-  host: "localhost"
-  #  host: "postgres"
-  port: 5432
-  sslmode: "disable"
-  user: "user"
-  password: "password"
-  dbname: "ssbot_db"
-  is_debug_mode: false

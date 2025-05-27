@@ -18,7 +18,6 @@ var logLevelMap = map[string]slog.Level{
 type AppConfig struct {
 	System *SystemConfig `yaml:"system"`
 	Log    *LogConfig    `yaml:"log"`
-	DB     *DbConfig     `yaml:"db"`
 }
 
 // SystemConfig - system parameters
@@ -32,17 +31,6 @@ type LogConfig struct {
 	Level        slog.Level
 	OutputFormat string `yaml:"output_format"`
 	Path         string `yaml:"path"`
-}
-
-// DbConfig - DB parameters
-type DbConfig struct {
-	IsDebugMode bool   `yaml:"is_debug_mode"`
-	Host        string `yaml:"host"`
-	Port        int    `yaml:"port"`
-	SslMode     string `yaml:"sslmode"`
-	User        string `yaml:"user"`
-	Password    string `yaml:"password"`
-	DbName      string `yaml:"dbname"`
 }
 
 // load config from file
