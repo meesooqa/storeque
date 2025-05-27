@@ -21,6 +21,7 @@ func NewMigrator(db *sql.DB) *Migrator {
 }
 
 func (o *Migrator) Migrate(fs embed.FS, path string) error {
+	defer o.db.Close()
 	driver, err := postgres.WithInstance(o.db, &postgres.Config{})
 	if err != nil {
 		return err

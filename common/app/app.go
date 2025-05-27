@@ -42,7 +42,7 @@ func NewAppDeps() *AppDeps {
 	loc := lang.NewLang(logger, conf.System.DefaultLangTag)
 
 	dbp := db_provider.NewDefaultDBProvider()
-	db, err := dbp.GetDB()
+	db, err := dbp.OpenDB()
 	if err != nil {
 		log.Fatal(err)
 	}
