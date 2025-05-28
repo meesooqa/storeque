@@ -7,25 +7,25 @@ import (
 )
 
 type Service struct {
-	repository UserRepository
+	userRepo UserRepository
 }
 
-func NewService(repository UserRepository) *Service {
-	return &Service{repository: repository}
+func NewService(userRepo UserRepository) *Service {
+	return &Service{userRepo: userRepo}
 }
 
 func (o *Service) Register(ctx context.Context, item *domain.User) error {
-	existing, err := o.repository.FindByTelegramID(ctx, item.TelegramID)
+	existing, err := o.userRepo.FindByTelegramID(ctx, item.TelegramID)
 	if err == nil && existing != nil {
 		return nil
 	}
 
-	err = o.repository.Create(ctx, item)
+	err = o.userRepo.Create(ctx, item)
 	if err != nil {
 		return err
 	}
 
-	err = o.repository.CreateSettings(ctx, item.ID)
+	err = o.userRepo.CreateSettings(ctx, item.ID)
 	if err != nil {
 		return err
 	}
