@@ -16,5 +16,10 @@ func NewService(repo *repo.UserRepo) *Service {
 }
 
 func (o *Service) Register(ctx context.Context, item *domain.User) error {
-	return o.repo.Create(ctx, item)
+	err := o.repo.Create(ctx, item)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
