@@ -2,5 +2,6 @@
   "tg.cmd.start.description": "Показать Меню.",
   "tg.cmd.help.description": "Показать эту справку.",
   "tg.cmd.dice.description": "Бросить игральную кость.",
-  "tg.cmd.buy.description": "Купить товар."
+  "tg.cmd.buy.description": "Купить товар.",
+  "tg.error.register": "Ошибка при регистрации."
 }

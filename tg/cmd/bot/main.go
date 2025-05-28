@@ -37,7 +37,10 @@ func main() {
 		// appDeps.Logger.Error("NewBot", slog.Any("err", err))
 		log.Fatal(err)
 	}
-	// bot.Debug = true
+
+	bot.Debug = true
+
+	// "from":{"id":5000386771,"is_bot":false,"first_name":"Stepan","last_name":"Test","language_code":"ru"}
 	appDeps.Logger.Info("Authorized", slog.String("Account", bot.Self.UserName))
 
 	u := tgbotapi.NewUpdate(0)

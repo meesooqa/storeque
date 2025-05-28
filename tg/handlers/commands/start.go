@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
@@ -53,8 +54,23 @@ func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {
 	// TODO err
 	err := o.userService.Register(ctx, user)
 	if err != nil {
-		// o.bot.Send(tele.NewMessage(update.Message.Chat.ID, "Ошибка при регистрации."))
+		o.appDeps.Logger.Error("register error", slog.Any("error", err))
+		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, o.appDeps.Lang.Localize("tg.error.register", nil))
+		o.bot.Send(msg)
 		return
 	}
-	// o.bot.Send(tele.NewMessage(update.Message.Chat.ID, "Добро пожаловать!"))
+	//msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Добро пожаловать!")
+	//o.bot.Send(msg)
+
+	/*keyboard := tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("Кнопка 1", "btn1"),
+			tgbotapi.NewInlineKeyboardButtonData("Кнопка 2", "btn2"),
+		),
+	)
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Выберите действие:")
+	msg.ReplyMarkup = keyboard
+	if _, err = o.bot.Send(msg); err != nil {
+		log.Println(err)
+	}*/
 }

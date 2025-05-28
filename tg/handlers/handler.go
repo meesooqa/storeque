@@ -57,10 +57,31 @@ func (o *TelegramHandler) HandleUpdate(update tgbotapi.Update) {
 	o.appDeps.Logger.Debug("update.Message", slog.String("UserName", "update.Message.From.UserName"), slog.String("Text", update.Message.Text))
 
 	// TODO SuccessfulPayment
-	//if update.Message.SuccessfulPayment != nil {
-	//	handleSuccessfulPayment(update.Message)
-	//	return
-	//}
+	/*if update.Message.SuccessfulPayment != nil {
+		handleSuccessfulPayment(update.Message)
+		return
+	}*/
+	/*if update.CallbackQuery != nil {
+		callback := update.CallbackQuery
+		// Ответ на callback, чтобы убрать "часики"
+		msg := tgbotapi.NewCallback(callback.ID, "Вы нажали: "+callback.Data)
+		// if _, err := o.bot.Request(msg); err != nil {
+		if _, err := o.bot.Send(msg); err != nil {
+			log.Println(err)
+		}
+
+		// Отправляем сообщение пользователю или обновляем текст
+		edit := tgbotapi.NewEditMessageText(
+			callback.Message.Chat.ID,
+			callback.Message.MessageID,
+			"Вы выбрали: "+callback.Data,
+		)
+		//if _, err := o.bot.Request(edit); err != nil {
+		if _, err := o.bot.Send(edit); err != nil {
+			log.Println(err)
+		}
+		return
+	}*/
 
 	if command, ok := o.commands[update.Message.Command()]; ok {
 		command.Handle(update.Message)
