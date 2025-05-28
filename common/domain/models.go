@@ -6,7 +6,7 @@ type User struct {
 	Username   string
 	FirstName  string
 	LastName   string
-	Settings   UserSettings
+	Settings   *UserSettings
 }
 
 type Role struct {
@@ -15,6 +15,8 @@ type Role struct {
 }
 
 type UserSettings struct {
-	Role string
-	Lang string
+	UserID int64
+	RoleID int64
+	Role   *Role
+	Lang   string
 }

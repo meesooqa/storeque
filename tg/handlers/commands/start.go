@@ -47,9 +47,14 @@ func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {
 	user := &domain.User{
 		TelegramID: inputMessage.From.ID,
 		Username:   inputMessage.From.UserName,
-		Firstname:  inputMessage.From.FirstName,
-		Lastname:   inputMessage.From.LastName,
+		FirstName:  inputMessage.From.FirstName,
+		LastName:   inputMessage.From.LastName,
 	}
 	// TODO err
-	o.userService.Register(ctx, user)
+	err := o.userService.Register(ctx, user)
+	if err != nil {
+		// o.bot.Send(tele.NewMessage(update.Message.Chat.ID, "Ошибка при регистрации."))
+		return
+	}
+	// o.bot.Send(tele.NewMessage(update.Message.Chat.ID, "Добро пожаловать!"))
 }
