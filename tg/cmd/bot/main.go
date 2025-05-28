@@ -16,11 +16,12 @@ import (
 func main() {
 	appDeps := app.NewAppDeps()
 
-	db, err := appDeps.DBProvider.OpenDB()
+	db, err := appDeps.DBProvider.Connect()
 	if err != nil {
-		appDeps.Logger.Error("db opening error", slog.Any("error", err))
+		appDeps.Logger.Error("db connection error", slog.Any("error", err))
 	}
-	// TODO defer db.Close()
+	defer db.Close()
+
 	userRepo := repositories.NewUserRepository(db)
 	userService := userservice.NewService(userRepo)
 

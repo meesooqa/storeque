@@ -14,11 +14,12 @@ var migrationsFS embed.FS
 func main() {
 	appDeps := app.NewAppDeps()
 
-	db, err := appDeps.DBProvider.OpenDB()
+	db, err := appDeps.DBProvider.Connect()
 	if err != nil {
-		appDeps.Logger.Error("db opening error", slog.Any("error", err))
+		appDeps.Logger.Error("db connection error", slog.Any("error", err))
 	}
 	defer db.Close()
+
 	migrator := migration.NewMigrator(db)
 	err = migrator.Migrate(migrationsFS, "migrations")
 	if err != nil {
