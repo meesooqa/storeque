@@ -1,23 +1,28 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/domain"
+	"tg-star-shop-bot-001/service/userservice"
 )
 
 type StartHandler struct {
 	BaseHandler
+	userService *userservice.Service
 }
 
-func NewStartHandler(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) *StartHandler {
+func NewStartHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *StartHandler {
 	return &StartHandler{
-		BaseHandler{
+		BaseHandler: BaseHandler{
 			bot:     bot,
 			appDeps: appDeps,
 		},
+		userService: userService,
 	}
 }
 
@@ -36,4 +41,15 @@ func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {
 	//  "Use /help to see commands list."
 	//msg := tgbotapi.NewMessage(inputMessage.Chat.ID, text)
 	//o.bot.Send(msg)
+
+	// TODO ctx := context.TODO()
+	ctx := context.TODO()
+	user := &domain.User{
+		TelegramID: inputMessage.From.ID,
+		Username:   inputMessage.From.UserName,
+		Firstname:  inputMessage.From.FirstName,
+		Lastname:   inputMessage.From.LastName,
+	}
+	// TODO err
+	o.userService.Register(ctx, user)
 }

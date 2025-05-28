@@ -1,7 +1,6 @@
 package app
 
 import (
-	"database/sql"
 	"log"
 	"log/slog"
 
@@ -17,10 +16,10 @@ import (
 )
 
 type AppDeps struct {
-	Config *config.AppConfig
-	Logger *slog.Logger
-	Lang   lang.Localization
-	DB     *sql.DB
+	Config     *config.AppConfig
+	Logger     *slog.Logger
+	Lang       lang.Localization
+	DBProvider db_provider.DBProvider
 }
 
 func NewAppDeps() *AppDeps {
@@ -39,18 +38,10 @@ func NewAppDeps() *AppDeps {
 	logger, cleanup := lp.GetLogger()
 	defer cleanup()
 
-	loc := lang.NewLang(logger, conf.System.DefaultLangTag)
-
-	dbp := db_provider.NewDefaultDBProvider()
-	db, err := dbp.OpenDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	return &AppDeps{
-		Config: conf,
-		Logger: logger,
-		Lang:   loc,
-		DB:     db,
+		Config:     conf,
+		Logger:     logger,
+		Lang:       lang.NewLang(logger, conf.System.DefaultLangTag),
+		DBProvider: db_provider.NewDefaultDBProvider(),
 	}
 }

@@ -6,14 +6,15 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/service/userservice"
 	"tg-star-shop-bot-001/tg/handlers/commands"
 )
 
-func getCommandHandlers(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) map[string]commands.CommandHandler {
+func getCommandHandlers(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]commands.CommandHandler {
 	// TODO UserGroup
 	helpHandler := commands.NewHelpHandler(bot, appDeps)
 	handlers := []commands.CommandHandler{
-		commands.NewStartHandler(bot, appDeps),
+		commands.NewStartHandler(appDeps, bot, userService),
 		helpHandler,
 		commands.NewBuyHandler(bot, appDeps),
 		// commands.NewMyHandler(bot, appDeps),
@@ -34,9 +35,9 @@ type TelegramHandler struct {
 	appDeps  *app.AppDeps
 }
 
-func NewTelegramHandler(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) *TelegramHandler {
+func NewTelegramHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
 	return &TelegramHandler{
-		commands: getCommandHandlers(bot, appDeps),
+		commands: getCommandHandlers(appDeps, bot, userService),
 		bot:      bot,
 		appDeps:  appDeps,
 	}

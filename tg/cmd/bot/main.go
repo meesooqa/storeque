@@ -8,16 +8,25 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/db/repo"
+	"tg-star-shop-bot-001/service/userservice"
 	"tg-star-shop-bot-001/tg/handlers"
 )
 
 func main() {
 	appDeps := app.NewAppDeps()
 
+	db, err := appDeps.DBProvider.OpenDB()
+	if err != nil {
+		appDeps.Logger.Error("db opening error", slog.Any("error", err))
+	}
+	// TODO defer db.Close()
+	userRepo := repo.NewUserRepo(db)
+	userService := userservice.NewService(userRepo)
+
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
 	apiEndpoint := os.Getenv("TELEGRAM_API_ENDPOINT")
 
-	var err error
 	var bot *tgbotapi.BotAPI
 	if apiEndpoint == "" {
 		bot, err = tgbotapi.NewBotAPI(token)
@@ -34,7 +43,7 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
-	handler := handlers.NewTelegramHandler(bot, appDeps)
+	handler := handlers.NewTelegramHandler(appDeps, bot, userService)
 	for update := range updates {
 		handler.HandleUpdate(update)
 	}
