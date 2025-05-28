@@ -8,7 +8,7 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/db/repo"
+	"tg-star-shop-bot-001/db/repositories"
 	"tg-star-shop-bot-001/service/userservice"
 	"tg-star-shop-bot-001/tg/handlers"
 )
@@ -21,7 +21,7 @@ func main() {
 		appDeps.Logger.Error("db opening error", slog.Any("error", err))
 	}
 	// TODO defer db.Close()
-	userRepo := repo.NewUserRepo(db)
+	userRepo := repositories.NewUserRepository(db)
 	userService := userservice.NewService(userRepo)
 
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")

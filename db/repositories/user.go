@@ -1,4 +1,4 @@
-package repo
+package repositories
 
 import (
 	"context"
@@ -6,30 +6,31 @@ import (
 	"errors"
 
 	"tg-star-shop-bot-001/common/domain"
+	"tg-star-shop-bot-001/db/entities"
 )
 
-type UserRepo struct {
+type UserRepository struct {
 	db                  *sql.DB
-	adapter             *userAdapter
-	userSettingsAdapter *userSettingsAdapter
+	adapter             *entities.UserAdapter
+	userSettingsAdapter *entities.UserSettingsAdapter
 }
 
-func NewUserRepo(db *sql.DB) *UserRepo {
-	return &UserRepo{
+func NewUserRepository(db *sql.DB) *UserRepository {
+	return &UserRepository{
 		db:                  db,
-		adapter:             newUserAdapter(),
-		userSettingsAdapter: newUserSettingsAdapter(),
+		adapter:             entities.NewUserAdapter(),
+		userSettingsAdapter: entities.NewUserSettingsAdapter(),
 	}
 }
 
-func (o *UserRepo) FindByID(ctx context.Context, id int64) (*domain.User, error) {
+func (o *UserRepository) FindByID(ctx context.Context, id int64) (*domain.User, error) {
 	const query = `
         SELECT *
         FROM users
         WHERE id = $1
     `
 	row := o.db.QueryRowContext(ctx, query, id)
-	item := &user{}
+	item := &entities.User{}
 	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.Username, &item.FirstName, &item.LastName); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // ErrNotFound
@@ -39,14 +40,14 @@ func (o *UserRepo) FindByID(ctx context.Context, id int64) (*domain.User, error)
 	return o.adapter.ToDomain(item), nil
 }
 
-func (o *UserRepo) FindByTelegramID(ctx context.Context, telegramID int64) (*domain.User, error) {
+func (o *UserRepository) FindByTelegramID(ctx context.Context, telegramID int64) (*domain.User, error) {
 	const query = `
         SELECT *
         FROM users
         WHERE telegram_id = $1
     `
 	row := o.db.QueryRowContext(ctx, query, telegramID)
-	item := &user{}
+	item := &entities.User{}
 	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.Username, &item.FirstName, &item.LastName); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // ErrNotFound
@@ -56,7 +57,7 @@ func (o *UserRepo) FindByTelegramID(ctx context.Context, telegramID int64) (*dom
 	return o.adapter.ToDomain(item), nil
 }
 
-func (o *UserRepo) Create(ctx context.Context, item *domain.User) error {
+func (o *UserRepository) Create(ctx context.Context, item *domain.User) error {
 	const query = `
         INSERT INTO users (telegram_id, username, first_name, last_name)
         VALUES ($1, $2, $3, $4)
@@ -67,7 +68,7 @@ func (o *UserRepo) Create(ctx context.Context, item *domain.User) error {
 		Scan(&item.ID)
 }
 
-func (o *UserRepo) Update(ctx context.Context, item *domain.User) error {
+func (o *UserRepository) Update(ctx context.Context, item *domain.User) error {
 	const query = `
         UPDATE users
         SET telegram_id = $1,
@@ -86,7 +87,7 @@ func (o *UserRepo) Update(ctx context.Context, item *domain.User) error {
 	return nil
 }
 
-func (o *UserRepo) Delete(ctx context.Context, id int64) error {
+func (o *UserRepository) Delete(ctx context.Context, id int64) error {
 	const query = `
         DELETE FROM users
         WHERE id = $1
@@ -101,7 +102,7 @@ func (o *UserRepo) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (o *UserRepo) CreateSettings(ctx context.Context, userID int64) error {
+func (o *UserRepository) CreateSettings(ctx context.Context, userID int64) error {
 	const query = `
         INSERT INTO user_settings (user_id)
         VALUES ($1)
@@ -110,7 +111,7 @@ func (o *UserRepo) CreateSettings(ctx context.Context, userID int64) error {
 	return err
 }
 
-func (o *UserRepo) GetSettings(ctx context.Context, userID int64) (*domain.UserSettings, error) {
+func (o *UserRepository) GetSettings(ctx context.Context, userID int64) (*domain.UserSettings, error) {
 	const query = `
         SELECT us.*, r.code AS role_code
         FROM user_settings us
@@ -118,7 +119,7 @@ func (o *UserRepo) GetSettings(ctx context.Context, userID int64) (*domain.UserS
         WHERE us.user_id = $1
     `
 	row := o.db.QueryRowContext(ctx, query, userID)
-	item := &userSettings{}
+	item := &entities.UserSettings{}
 	if err := row.Scan(&item.UserID, &item.CreatedAt, &item.UpdatedAt, &item.Lang, &item.RoleID, &item.Role); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // ErrNotFound

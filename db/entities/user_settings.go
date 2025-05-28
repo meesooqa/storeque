@@ -1,4 +1,4 @@
-package repo
+package entities
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 	"tg-star-shop-bot-001/common/domain"
 )
 
-type userSettings struct {
+type UserSettings struct {
 	UserID    int64     `db:"user_id"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
@@ -15,13 +15,13 @@ type userSettings struct {
 	Role      string    `db:"role_code"` // SELECT us.*, r.code AS role_code
 }
 
-type userSettingsAdapter struct{}
+type UserSettingsAdapter struct{}
 
-func newUserSettingsAdapter() *userSettingsAdapter {
-	return &userSettingsAdapter{}
+func NewUserSettingsAdapter() *UserSettingsAdapter {
+	return &UserSettingsAdapter{}
 }
 
-func (a *userSettingsAdapter) ToDomain(item *userSettings) *domain.UserSettings {
+func (a *UserSettingsAdapter) ToDomain(item *UserSettings) *domain.UserSettings {
 	return &domain.UserSettings{
 		UserID: item.UserID,
 		RoleID: item.RoleID,
@@ -33,8 +33,8 @@ func (a *userSettingsAdapter) ToDomain(item *userSettings) *domain.UserSettings 
 	}
 }
 
-func (a *userSettingsAdapter) FromDomain(item *domain.UserSettings) *userSettings {
-	return &userSettings{
+func (a *UserSettingsAdapter) FromDomain(item *domain.UserSettings) *UserSettings {
+	return &UserSettings{
 		UserID: item.UserID,
 		RoleID: item.RoleID,
 		Role:   item.Role.Code,

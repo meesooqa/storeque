@@ -1,4 +1,4 @@
-package repo
+package entities
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 	"tg-star-shop-bot-001/common/domain"
 )
 
-type user struct {
+type User struct {
 	ID         int64     `db:"id"`
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`
@@ -16,13 +16,13 @@ type user struct {
 	LastName   string    `db:"lastname"`
 }
 
-type userAdapter struct{}
+type UserAdapter struct{}
 
-func newUserAdapter() *userAdapter {
-	return &userAdapter{}
+func NewUserAdapter() *UserAdapter {
+	return &UserAdapter{}
 }
 
-func (a *userAdapter) ToDomain(item *user) *domain.User {
+func (a *UserAdapter) ToDomain(item *User) *domain.User {
 	return &domain.User{
 		ID:         item.ID,
 		Username:   item.Username,
@@ -32,8 +32,8 @@ func (a *userAdapter) ToDomain(item *user) *domain.User {
 	}
 }
 
-func (a *userAdapter) FromDomain(item *domain.User) *user {
-	return &user{
+func (a *UserAdapter) FromDomain(item *domain.User) *User {
+	return &User{
 		ID:         item.ID,
 		Username:   item.Username,
 		FirstName:  item.FirstName,
