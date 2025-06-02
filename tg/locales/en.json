@@ -4,7 +4,8 @@
   "tg.cmd.dice.description": "Send a random dice roll.",
   "tg.cmd.buy.description": "Buy a product.",
 
-  "tg.clbk.lang.ru": "English chosen \uD83C\uDF89",
+  "tg.clbk.lang.ru": "Russian chosen \uD83C\uDF89",
+  "tg.clbk.lang.en": "English chosen \uD83C\uDF89",
 
   "tg.error.updatelang": "Saving language settings error.",
   "tg.error.register": "Register error."
