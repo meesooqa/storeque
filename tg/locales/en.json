@@ -1,12 +1,21 @@
 {
-  "tg.cmd.start.description": "Show Main Menu.",
-  "tg.cmd.help.description": "Show this help.",
-  "tg.cmd.dice.description": "Send a random dice roll.",
-  "tg.cmd.buy.description": "Buy a product.",
-
-  "tg.clbk.lang.ru": "Russian chosen \uD83C\uDF89",
-  "tg.clbk.lang.en": "English chosen \uD83C\uDF89",
-
-  "tg.error.updatelang": "Saving language settings error.",
-  "tg.error.register": "Register error."
+  "tg": {
+    "cmd": {
+      "start": { "description": "Show Main Menu." },
+      "help": { "description": "Show this help." },
+      "settings": { "description": "Settings." },
+      "dice": { "description": "Send a random dice roll." },
+      "buy": { "description": "Buy a product." }
+    },
+    "clbk": {
+      "lang": {
+        "ru": "Russian chosen \uD83C\uDF89",
+        "en": "English chosen \uD83C\uDF89"
+      }
+    },
+    "error": {
+      "updatelang": "Saving language settings error.",
+      "register": "Register error."
+    }
+  }
 }
