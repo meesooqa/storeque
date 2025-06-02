@@ -16,12 +16,12 @@ type CallbackHandler interface {
 
 type BaseHandler struct {
 	bot      *tgbotapi.BotAPI
-	appDeps  *app.AppDeps
+	appDeps  app.App
 	children []CallbackHandler
 }
 
 // GetAll returns list of all callbacks
-func GetAll(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CallbackHandler {
+func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CallbackHandler {
 	list := []CallbackHandler{
 		NewLangRuHandler(appDeps, bot, userService),
 		NewLangEnHandler(appDeps, bot, userService),
@@ -29,7 +29,6 @@ func GetAll(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice
 
 	handlersMap := make(map[string]CallbackHandler)
 	for _, item := range list {
-		appDeps.Logger.Debug(item.GetData())
 		if item.GetData() != "" {
 			handlersMap[item.GetData()] = item
 		}

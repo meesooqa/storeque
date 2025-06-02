@@ -15,14 +15,14 @@ import (
 )
 
 func main() {
-	appDeps := app.NewAppDeps()
+	appDeps := app.GetInstance()
 
 	// TODO ctx := context.TODO()
 	ctx := context.TODO()
 
-	db, err := appDeps.DBProvider.Connect()
+	db, err := appDeps.DBProvider().Connect()
 	if err != nil {
-		appDeps.Logger.Error("db connection error", slog.Any("error", err))
+		appDeps.Logger().Error("db connection error", slog.Any("error", err))
 	}
 	defer db.Close()
 
@@ -46,8 +46,7 @@ func main() {
 
 	//bot.Debug = true
 
-	// "from":{"id":5000386771,"is_bot":false,"first_name":"Stepan","last_name":"Test","language_code":"ru"}
-	appDeps.Logger.Info("Authorized", slog.String("Account", bot.Self.UserName))
+	appDeps.Logger().Info("Authorized", slog.String("Account", bot.Self.UserName))
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

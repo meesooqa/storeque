@@ -12,7 +12,7 @@ type DefaultHandler struct {
 	BaseHandler
 }
 
-func NewDefaultHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *DefaultHandler {
+func NewDefaultHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DefaultHandler {
 	return &DefaultHandler{
 		BaseHandler{
 			bot:     bot,

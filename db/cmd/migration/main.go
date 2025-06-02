@@ -12,17 +12,17 @@ import (
 var migrationsFS embed.FS
 
 func main() {
-	appDeps := app.NewAppDeps()
+	appDeps := app.GetInstance()
 
-	db, err := appDeps.DBProvider.Connect()
+	db, err := appDeps.DBProvider().Connect()
 	if err != nil {
-		appDeps.Logger.Error("db connection error", slog.Any("error", err))
+		appDeps.Logger().Error("db connection error", slog.Any("error", err))
 	}
 	defer db.Close()
 
 	migrator := migration.NewMigrator(db)
 	err = migrator.Migrate(migrationsFS, "migrations")
 	if err != nil {
-		appDeps.Logger.Error("migration error", slog.Any("error", err))
+		appDeps.Logger().Error("migration error", slog.Any("error", err))
 	}
 }

@@ -14,7 +14,7 @@ type BuyHandler struct {
 	BaseHandler
 }
 
-func NewBuyHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *BuyHandler {
+func NewBuyHandler(appDeps app.App, bot *tgbotapi.BotAPI) *BuyHandler {
 	return &BuyHandler{
 		BaseHandler{
 			bot:     bot,
@@ -28,7 +28,7 @@ func (o *BuyHandler) GetName() string {
 }
 
 func (o *BuyHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *BuyHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {

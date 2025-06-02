@@ -18,7 +18,7 @@ type StartHandler struct {
 	userService *userservice.Service
 }
 
-func NewStartHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *StartHandler {
+func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *StartHandler {
 	return &StartHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,
@@ -33,7 +33,7 @@ func (o *StartHandler) GetName() string {
 }
 
 func (o *StartHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *StartHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
@@ -54,8 +54,8 @@ func (o *StartHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Messag
 	// TODO err
 	err := o.userService.Register(ctx, user)
 	if err != nil {
-		o.appDeps.Logger.Error("register error", slog.Any("error", err))
-		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, o.appDeps.Lang.Localize("tg.error.register", nil))
+		o.appDeps.Logger().Error("register error", slog.Any("error", err))
+		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, o.appDeps.Lang().Localize("tg.error.register", nil))
 		o.bot.Send(msg)
 		return
 	}

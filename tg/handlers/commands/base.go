@@ -17,11 +17,11 @@ type CommandHandler interface {
 
 type BaseHandler struct {
 	bot     *tgbotapi.BotAPI
-	appDeps *app.AppDeps
+	appDeps app.App
 }
 
 // GetAll returns list of all commands
-func GetAll(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CommandHandler {
+func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CommandHandler {
 	help := NewHelpHandler(appDeps, bot)
 	list := []CommandHandler{
 		NewStartHandler(appDeps, bot, userService),

@@ -3,6 +3,7 @@ package userservice
 import (
 	"context"
 
+	"tg-star-shop-bot-001/common/app"
 	"tg-star-shop-bot-001/common/domain"
 )
 
@@ -38,5 +39,7 @@ func (this *Service) Register(ctx context.Context, item *domain.User) error {
 }
 
 func (this *Service) SetChatLang(ctx context.Context, chatID int64, value string) error {
+	appDeps := app.GetInstance()
+	appDeps.ChangeLang(value)
 	return this.userSettingsRepo.UpdateLangByChatID(ctx, chatID, value)
 }

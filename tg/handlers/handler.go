@@ -12,13 +12,13 @@ import (
 	"tg-star-shop-bot-001/tg/handlers/commands"
 )
 
-func getCommandHandlers(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]commands.CommandHandler {
+func getCommandHandlers(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]commands.CommandHandler {
 	// TODO filter by UserGroup
 	handlersMap := commands.GetAll(appDeps, bot, userService)
 	return handlersMap
 }
 
-func getCallbackHandlers(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]callbacks.CallbackHandler {
+func getCallbackHandlers(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]callbacks.CallbackHandler {
 	handlersMap := callbacks.GetAll(appDeps, bot, userService)
 	return handlersMap
 }
@@ -27,10 +27,10 @@ type TelegramHandler struct {
 	commands  map[string]commands.CommandHandler
 	callbacks map[string]callbacks.CallbackHandler
 	bot       *tgbotapi.BotAPI
-	appDeps   *app.AppDeps
+	appDeps   app.App
 }
 
-func NewTelegramHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
+func NewTelegramHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
 	return &TelegramHandler{
 		commands:  getCommandHandlers(appDeps, bot, userService),
 		callbacks: getCallbackHandlers(appDeps, bot, userService),
@@ -42,7 +42,7 @@ func NewTelegramHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService 
 func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Update) {
 	defer func() {
 		if panicValue := recover(); panicValue != nil {
-			o.appDeps.Logger.Info("recovered from panic", slog.Any("panicValue", panicValue))
+			o.appDeps.Logger().Info("recovered from panic", slog.Any("panicValue", panicValue))
 		}
 	}()
 
@@ -56,7 +56,7 @@ func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Upda
 		return
 	}*/
 	if update.CallbackQuery != nil {
-		o.appDeps.Logger.Info("clbk data", slog.String("data", update.CallbackQuery.Data))
+		o.appDeps.Logger().Info("clbk data", slog.String("data", update.CallbackQuery.Data))
 		if callback, ok := o.callbacks[update.CallbackQuery.Data]; ok {
 			callback.Handle(ctx, update.CallbackQuery)
 		} else {

@@ -1,12 +1,21 @@
 {
-  "tg.cmd.start.description": "Показать Меню.",
-  "tg.cmd.help.description": "Показать эту справку.",
-  "tg.cmd.dice.description": "Бросить игральную кость.",
-  "tg.cmd.buy.description": "Купить товар.",
-
-  "tg.clbk.lang.ru": "Выбран русский язык \uD83C\uDF89",
-  "tg.clbk.lang.en": "Выбран английский язык \uD83C\uDF89",
-
-  "tg.error.updatelang": "Ошибка при сохранении настроек языка.",
-  "tg.error.register": "Ошибка при регистрации."
+  "tg": {
+    "cmd": {
+      "start": { "description": "Показать Меню." },
+      "help": { "description": "Показать эту справку." },
+      "settings": { "description": "Настройки." },
+      "dice": { "description": "Бросить игральную кость." },
+      "buy": { "description": "Купить товар." }
+    },
+    "clbk": {
+      "lang": {
+        "ru": "Выбран русский язык \uD83C\uDF89",
+        "en": "Выбран английский язык \uD83C\uDF89"
+      }
+    },
+    "error": {
+      "updatelang": "Ошибка при сохранении настроек языка.",
+      "register": "Ошибка при регистрации."
+    }
+  }
 }

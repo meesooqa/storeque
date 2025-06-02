@@ -13,7 +13,7 @@ type DiceHandler struct {
 	BaseHandler
 }
 
-func NewDiceHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *DiceHandler {
+func NewDiceHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DiceHandler {
 	return &DiceHandler{
 		BaseHandler{
 			bot:     bot,
@@ -27,7 +27,7 @@ func (o *DiceHandler) GetName() string {
 }
 
 func (o *DiceHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *DiceHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {

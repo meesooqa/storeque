@@ -14,7 +14,7 @@ type HelpHandler struct {
 	availableCommands []CommandHandler
 }
 
-func NewHelpHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *HelpHandler {
+func NewHelpHandler(appDeps app.App, bot *tgbotapi.BotAPI) *HelpHandler {
 	return &HelpHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,
@@ -28,7 +28,7 @@ func (o *HelpHandler) GetName() string {
 }
 
 func (o *HelpHandler) GetDescription() string {
-	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
 func (o *HelpHandler) SetAvailableCommands(availableCommands []CommandHandler) {

@@ -17,7 +17,7 @@ type LangRuHandler struct {
 	userService *userservice.Service
 }
 
-func NewLangRuHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *LangRuHandler {
+func NewLangRuHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *LangRuHandler {
 	return &LangRuHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,
@@ -36,13 +36,13 @@ func (this *LangRuHandler) Handle(ctx context.Context, callbackQuery *tgbotapi.C
 
 	err := this.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueRu)
 	if err != nil {
-		this.appDeps.Logger.Error("LangRuHandler", slog.Any("error", err))
+		this.appDeps.Logger().Error("LangRuHandler", slog.Any("error", err))
 		// Remove loading animation and show popup message
-		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, this.appDeps.Lang.Localize("tg.error.updatelang", nil)))
+		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, this.appDeps.Lang().Localize("tg.error.updatelang", nil)))
 		return
 	}
 
-	this.bot.Send(tgbotapi.NewMessage(chatID, this.appDeps.Lang.Localize("tg.clbk.lang.ru", nil)))
+	this.bot.Send(tgbotapi.NewMessage(chatID, this.appDeps.Lang().Localize("tg.clbk.lang.ru", nil)))
 	// Remove loading animation
 	this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, ""))
 }
