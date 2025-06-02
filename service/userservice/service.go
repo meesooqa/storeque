@@ -7,28 +7,36 @@ import (
 )
 
 type Service struct {
-	userRepo domain.UserRepository
+	userRepo         domain.UserRepository
+	userSettingsRepo domain.UserSettingsRepository
 }
 
-func NewService(userRepo domain.UserRepository) *Service {
-	return &Service{userRepo: userRepo}
+func NewService(userRepo domain.UserRepository, userSettingsRepo domain.UserSettingsRepository) *Service {
+	return &Service{
+		userRepo:         userRepo,
+		userSettingsRepo: userSettingsRepo,
+	}
 }
 
-func (o *Service) Register(ctx context.Context, item *domain.User) error {
-	existing, err := o.userRepo.FindByTelegramID(ctx, item.TelegramID)
+func (this *Service) Register(ctx context.Context, item *domain.User) error {
+	existing, err := this.userRepo.FindByChatID(ctx, item.ChatID)
 	if err == nil && existing != nil {
 		return nil
 	}
 
-	err = o.userRepo.Create(ctx, item)
+	err = this.userRepo.Create(ctx, item)
 	if err != nil {
 		return err
 	}
 
-	err = o.userRepo.CreateSettings(ctx, item.ID)
+	err = this.userRepo.CreateSettings(ctx, item.ID)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (this *Service) SetChatLang(ctx context.Context, chatID int64, value string) error {
+	return this.userSettingsRepo.UpdateLangByChatID(ctx, chatID, value)
 }

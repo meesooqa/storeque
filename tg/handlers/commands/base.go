@@ -1,13 +1,16 @@
 package commands
 
 import (
+	"context"
+
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/service/userservice"
 )
 
 type CommandHandler interface {
-	Handle(*tgbotapi.Message)
+	Handle(context.Context, *tgbotapi.Message)
 	GetName() string
 	GetDescription() string
 }
@@ -15,4 +18,24 @@ type CommandHandler interface {
 type BaseHandler struct {
 	bot     *tgbotapi.BotAPI
 	appDeps *app.AppDeps
+}
+
+// GetAll returns list of all commands
+func GetAll(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CommandHandler {
+	help := NewHelpHandler(appDeps, bot)
+	list := []CommandHandler{
+		NewStartHandler(appDeps, bot, userService),
+		help,
+		NewBuyHandler(appDeps, bot),
+		NewDiceHandler(appDeps, bot),
+	}
+	help.SetAvailableCommands(list)
+
+	handlersMap := make(map[string]CommandHandler)
+	for _, item := range list {
+		if item.GetName() != "" {
+			handlersMap[item.GetName()] = item
+		}
+	}
+	return handlersMap
 }

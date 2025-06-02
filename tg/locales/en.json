@@ -2,5 +2,10 @@
   "tg.cmd.start.description": "Show Main Menu.",
   "tg.cmd.help.description": "Show this help.",
   "tg.cmd.dice.description": "Send a random dice roll.",
-  "tg.cmd.buy.description": "Buy a product."
+  "tg.cmd.buy.description": "Buy a product.",
+
+  "tg.clbk.lang.ru": "English chosen \uD83C\uDF89",
+
+  "tg.error.updatelang": "Saving language settings error.",
+  "tg.error.register": "Register error."
 }

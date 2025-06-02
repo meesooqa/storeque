@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"fmt"
+	"log"
 	"log/slog"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
@@ -35,22 +36,21 @@ func (o *StartHandler) GetDescription() string {
 	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {
-	// TODO save user to DB
+func (o *StartHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
 	// TODO langTag from user config
 	//  "Welcome, {{.UserName}}!"
 	//  "Use /help to see commands list."
-	//msg := tgbotapi.NewMessage(inputMessage.Chat.ID, text)
-	//o.bot.Send(msg)
 
-	// TODO ctx := context.TODO()
-	ctx := context.TODO()
+	// TelegramID	2200662751
+	// ChatID		5000386771
 	user := &domain.User{
-		TelegramID: inputMessage.From.ID,
-		Username:   inputMessage.From.UserName,
-		FirstName:  inputMessage.From.FirstName,
-		LastName:   inputMessage.From.LastName,
+		ChatID: inputMessage.From.ID,
+		// TelegramID: inputMessage.From.ID,
+		Username:  inputMessage.From.UserName,
+		FirstName: inputMessage.From.FirstName,
+		LastName:  inputMessage.From.LastName,
 	}
+
 	// TODO err
 	err := o.userService.Register(ctx, user)
 	if err != nil {
@@ -59,18 +59,24 @@ func (o *StartHandler) Handle(inputMessage *tgbotapi.Message) {
 		o.bot.Send(msg)
 		return
 	}
-	//msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Добро пожаловать!")
-	//o.bot.Send(msg)
 
-	/*keyboard := tgbotapi.NewInlineKeyboardMarkup(
+	keyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
-			tgbotapi.NewInlineKeyboardButtonData("Кнопка 1", "btn1"),
-			tgbotapi.NewInlineKeyboardButtonData("Кнопка 2", "btn2"),
+			tgbotapi.NewInlineKeyboardButtonData("🇷🇺", "lang-ru"),
+			tgbotapi.NewInlineKeyboardButtonData("🇺🇸", "lang-en"),
+		),
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("🇺🇦", "lang-ru"),
+			tgbotapi.NewInlineKeyboardButtonData("🇬🇧", "lang-en"),
+		),
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("🇧🇾", "lang-ru"),
+			tgbotapi.NewInlineKeyboardButtonData("🇦🇺", "lang-en"),
 		),
 	)
-	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Выберите действие:")
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Language:")
 	msg.ReplyMarkup = keyboard
 	if _, err = o.bot.Send(msg); err != nil {
 		log.Println(err)
-	}*/
+	}
 }

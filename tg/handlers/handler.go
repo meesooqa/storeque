@@ -1,92 +1,79 @@
 package handlers
 
 import (
+	"context"
 	"log/slog"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
 	"tg-star-shop-bot-001/service/userservice"
+	"tg-star-shop-bot-001/tg/handlers/callbacks"
 	"tg-star-shop-bot-001/tg/handlers/commands"
 )
 
 func getCommandHandlers(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]commands.CommandHandler {
-	// TODO UserGroup
-	helpHandler := commands.NewHelpHandler(bot, appDeps)
-	handlers := []commands.CommandHandler{
-		commands.NewStartHandler(appDeps, bot, userService),
-		helpHandler,
-		commands.NewBuyHandler(bot, appDeps),
-		// commands.NewMyHandler(bot, appDeps),
-		commands.NewDiceHandler(bot, appDeps),
-	}
-	helpHandler.SetAvailableCommands(handlers)
+	// TODO filter by UserGroup
+	handlersMap := commands.GetAll(appDeps, bot, userService)
+	return handlersMap
+}
 
-	handlersMap := make(map[string]commands.CommandHandler)
-	for _, h := range handlers {
-		handlersMap[h.GetName()] = h
-	}
+func getCallbackHandlers(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]callbacks.CallbackHandler {
+	handlersMap := callbacks.GetAll(appDeps, bot, userService)
 	return handlersMap
 }
 
 type TelegramHandler struct {
-	commands map[string]commands.CommandHandler
-	bot      *tgbotapi.BotAPI
-	appDeps  *app.AppDeps
+	commands  map[string]commands.CommandHandler
+	callbacks map[string]callbacks.CallbackHandler
+	bot       *tgbotapi.BotAPI
+	appDeps   *app.AppDeps
 }
 
 func NewTelegramHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
 	return &TelegramHandler{
-		commands: getCommandHandlers(appDeps, bot, userService),
-		bot:      bot,
-		appDeps:  appDeps,
+		commands:  getCommandHandlers(appDeps, bot, userService),
+		callbacks: getCallbackHandlers(appDeps, bot, userService),
+		bot:       bot,
+		appDeps:   appDeps,
 	}
 }
 
-func (o *TelegramHandler) HandleUpdate(update tgbotapi.Update) {
+func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Update) {
 	defer func() {
 		if panicValue := recover(); panicValue != nil {
 			o.appDeps.Logger.Info("recovered from panic", slog.Any("panicValue", panicValue))
 		}
 	}()
 
-	if update.Message == nil {
-		return
-	}
-
-	o.appDeps.Logger.Debug("update.Message", slog.String("UserName", "update.Message.From.UserName"), slog.String("Text", update.Message.Text))
+	//if !CheckAuthorizedUser(update.Message.From.ID) {
+	//	return
+	//}
 
 	// TODO SuccessfulPayment
 	/*if update.Message.SuccessfulPayment != nil {
 		handleSuccessfulPayment(update.Message)
 		return
 	}*/
-	/*if update.CallbackQuery != nil {
-		callback := update.CallbackQuery
-		// Ответ на callback, чтобы убрать "часики"
-		msg := tgbotapi.NewCallback(callback.ID, "Вы нажали: "+callback.Data)
-		// if _, err := o.bot.Request(msg); err != nil {
-		if _, err := o.bot.Send(msg); err != nil {
-			log.Println(err)
-		}
-
-		// Отправляем сообщение пользователю или обновляем текст
-		edit := tgbotapi.NewEditMessageText(
-			callback.Message.Chat.ID,
-			callback.Message.MessageID,
-			"Вы выбрали: "+callback.Data,
-		)
-		//if _, err := o.bot.Request(edit); err != nil {
-		if _, err := o.bot.Send(edit); err != nil {
-			log.Println(err)
+	if update.CallbackQuery != nil {
+		o.appDeps.Logger.Info("clbk data", slog.String("data", update.CallbackQuery.Data))
+		if callback, ok := o.callbacks[update.CallbackQuery.Data]; ok {
+			callback.Handle(ctx, update.CallbackQuery)
+		} else {
+			clbkHandler := callbacks.NewDefaultHandler(o.appDeps, o.bot)
+			clbkHandler.Handle(ctx, update.CallbackQuery)
 		}
 		return
-	}*/
+	}
+
+	if update.Message == nil {
+		return
+	}
 
 	if command, ok := o.commands[update.Message.Command()]; ok {
-		command.Handle(update.Message)
+		command.Handle(ctx, update.Message)
 	} else {
-		cmdHandler := commands.NewDefaultHandler(o.bot, o.appDeps)
-		cmdHandler.Handle(update.Message)
+		cmdHandler := commands.NewDefaultHandler(o.appDeps, o.bot)
+		cmdHandler.Handle(ctx, update.Message)
 	}
 }

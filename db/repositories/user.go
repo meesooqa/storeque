@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 
 	"tg-star-shop-bot-001/common/domain"
 	"tg-star-shop-bot-001/db/entities"
@@ -23,32 +24,16 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (o *UserRepository) FindByID(ctx context.Context, id int64) (*domain.User, error) {
+func (o *UserRepository) FindByChatID(ctx context.Context, chatID int64) (*domain.User, error) {
 	const query = `
         SELECT *
         FROM users
-        WHERE id = $1
+        WHERE chat_id = $1
     `
-	row := o.db.QueryRowContext(ctx, query, id)
+	row := o.db.QueryRowContext(ctx, query, chatID)
 	item := &entities.User{}
-	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.Username, &item.FirstName, &item.LastName); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil // ErrNotFound
-		}
-		return nil, err
-	}
-	return o.adapter.ToDomain(item), nil
-}
-
-func (o *UserRepository) FindByTelegramID(ctx context.Context, telegramID int64) (*domain.User, error) {
-	const query = `
-        SELECT *
-        FROM users
-        WHERE telegram_id = $1
-    `
-	row := o.db.QueryRowContext(ctx, query, telegramID)
-	item := &entities.User{}
-	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.Username, &item.FirstName, &item.LastName); err != nil {
+	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.ChatID, &item.Username, &item.FirstName, &item.LastName); err != nil {
+		log.Printf("UserRepo::FindByChatID: %s", err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // ErrNotFound
 		}
@@ -59,25 +44,25 @@ func (o *UserRepository) FindByTelegramID(ctx context.Context, telegramID int64)
 
 func (o *UserRepository) Create(ctx context.Context, item *domain.User) error {
 	const query = `
-        INSERT INTO users (telegram_id, username, first_name, last_name)
+        INSERT INTO users (chat_id, username, first_name, last_name)
         VALUES ($1, $2, $3, $4)
         RETURNING id
     `
 	return o.db.
-		QueryRowContext(ctx, query, item.TelegramID, item.Username, item.FirstName, item.LastName).
+		QueryRowContext(ctx, query, item.ChatID, item.Username, item.FirstName, item.LastName).
 		Scan(&item.ID)
 }
 
 func (o *UserRepository) Update(ctx context.Context, item *domain.User) error {
 	const query = `
         UPDATE users
-        SET telegram_id = $1,
+        SET chat_id = $1,
             username = $2,
             first_name = $3,
             last_name = $4
         WHERE id = $5
     `
-	res, err := o.db.ExecContext(ctx, query, item.TelegramID, item.Username, item.FirstName, item.LastName, item.ID)
+	res, err := o.db.ExecContext(ctx, query, item.ChatID, item.Username, item.FirstName, item.LastName, item.ID)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    telegram_id BIGINT NOT NULL UNIQUE,
+    telegram_id BIGINT UNIQUE DEFAULT 0,
+    chat_id BIGINT NOT NULL UNIQUE,
     username VARCHAR(255),
     first_name VARCHAR(255),
     last_name VARCHAR(255)
@@ -28,7 +29,7 @@ CREATE TABLE user_settings (
             ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    lang  VARCHAR(15) NOT NULL DEFAULT 'en',
+    lang  VARCHAR(15) DEFAULT 'en',
     role_id INT NOT NULL DEFAULT 4, -- 4: 'customer' role
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id)

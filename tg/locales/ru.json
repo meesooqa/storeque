@@ -3,5 +3,9 @@
   "tg.cmd.help.description": "Показать эту справку.",
   "tg.cmd.dice.description": "Бросить игральную кость.",
   "tg.cmd.buy.description": "Купить товар.",
+
+  "tg.clbk.lang.ru": "Выбран русский язык \uD83C\uDF89",
+
+  "tg.error.updatelang": "Ошибка при сохранении настроек языка.",
   "tg.error.register": "Ошибка при регистрации."
 }

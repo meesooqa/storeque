@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
@@ -13,7 +14,7 @@ type HelpHandler struct {
 	availableCommands []CommandHandler
 }
 
-func NewHelpHandler(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) *HelpHandler {
+func NewHelpHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *HelpHandler {
 	return &HelpHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,
@@ -34,7 +35,7 @@ func (o *HelpHandler) SetAvailableCommands(availableCommands []CommandHandler) {
 	o.availableCommands = availableCommands
 }
 
-func (o *HelpHandler) Handle(inputMessage *tgbotapi.Message) {
+func (o *HelpHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
 	// TODO o.appDeps.Lang.Localize()
 	text := "*Справка по использованию бота*"
 	text += "\n\n"

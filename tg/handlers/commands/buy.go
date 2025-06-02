@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
@@ -13,7 +14,7 @@ type BuyHandler struct {
 	BaseHandler
 }
 
-func NewBuyHandler(bot *tgbotapi.BotAPI, appDeps *app.AppDeps) *BuyHandler {
+func NewBuyHandler(appDeps *app.AppDeps, bot *tgbotapi.BotAPI) *BuyHandler {
 	return &BuyHandler{
 		BaseHandler{
 			bot:     bot,
@@ -30,7 +31,7 @@ func (o *BuyHandler) GetDescription() string {
 	return o.appDeps.Lang.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *BuyHandler) Handle(inputMessage *tgbotapi.Message) {
+func (o *BuyHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
 	// TODO o.appDeps.Lang.Localize()
 	// TODO promocode
 	product := struct {
