@@ -36,14 +36,13 @@ func (this *LangRuHandler) Handle(ctx context.Context, loc lang.Localization, ca
 	chatID := callbackQuery.Message.Chat.ID
 
 	err := this.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueRu)
+	loc.SetLang(domain.UserSettingsLangValueRu)
 	if err != nil {
 		this.appDeps.Logger().Error("LangRuHandler", slog.Any("error", err))
 		// Remove loading animation and show popup message
 		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, loc.Localize("tg.error.updatelang", nil)))
 		return
 	}
-
-	loc.SetLang(domain.UserSettingsLangValueRu)
 
 	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.ru", nil)))
 	// Remove loading animation

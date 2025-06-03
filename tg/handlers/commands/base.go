@@ -28,6 +28,7 @@ func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Serv
 	list := []CommandHandler{
 		NewStartHandler(appDeps, bot, userService),
 		help,
+		NewSettingsHandler(appDeps, bot, userService),
 		NewBuyHandler(appDeps, bot),
 		NewDiceHandler(appDeps, bot),
 	}

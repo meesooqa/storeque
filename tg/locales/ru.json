@@ -3,7 +3,12 @@
     "cmd": {
       "start": { "description": "Показать Меню." },
       "help": { "description": "Показать эту справку." },
-      "settings": { "description": "Настройки." },
+      "settings": {
+        "description": "Настройки.",
+        "title": "Ваши настройки",
+        "lang": "Язык",
+        "role": "Роль"
+      },
       "dice": { "description": "Бросить игральную кость." },
       "buy": { "description": "Купить товар." }
     },
@@ -14,6 +19,7 @@
       }
     },
     "error": {
+      "getusersettings": "Ошибка при получении списка настроек.",
       "updatelang": "Ошибка при сохранении настроек языка.",
       "register": "Ошибка при регистрации."
     }

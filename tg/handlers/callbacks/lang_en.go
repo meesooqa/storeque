@@ -36,14 +36,13 @@ func (this *LangEnHandler) Handle(ctx context.Context, loc lang.Localization, ca
 	chatID := callbackQuery.Message.Chat.ID
 
 	err := this.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueEn)
+	loc.SetLang(domain.UserSettingsLangValueEn)
 	if err != nil {
 		this.appDeps.Logger().Error("LangEnHandler", slog.Any("error", err))
 		// Remove loading animation and show popup message
 		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, loc.Localize("tg.error.updatelang", nil)))
 		return
 	}
-
-	loc.SetLang(domain.UserSettingsLangValueEn)
 
 	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.en", nil)))
 	// Remove loading animation
