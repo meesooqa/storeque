@@ -30,7 +30,8 @@ func main() {
 
 	userRepo := repositories.NewUserRepository(db)
 	userSettingsRepo := repositories.NewUserSettingsRepository(db)
-	userService := userservice.NewService(userRepo, userSettingsRepo)
+	cmdRepo := repositories.NewCommandRepository(db)
+	userService := userservice.NewService(userRepo, userSettingsRepo, cmdRepo)
 
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
 	apiEndpoint := os.Getenv("TELEGRAM_API_ENDPOINT")

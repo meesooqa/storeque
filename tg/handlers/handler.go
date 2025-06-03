@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"log/slog"
+	"slices"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
@@ -50,6 +51,11 @@ func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.U
 	}()
 
 	loc := this.obtainLoc(ctx, update)
+	allowedCommands, err := this.obtainAllowedCommands(ctx, update)
+	if err != nil {
+		this.appDeps.Logger().Error("HandleUpdate-allowedCommands", slog.Any("error", err))
+		return
+	}
 
 	//if !CheckAuthorizedUser(update.Message.From.ID) {
 	//	return
@@ -61,7 +67,7 @@ func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.U
 		return
 	}*/
 	if update.CallbackQuery != nil {
-		this.appDeps.Logger().Info("clbk data", slog.String("data", update.CallbackQuery.Data))
+		this.appDeps.Logger().Debug("clbk data", slog.String("data", update.CallbackQuery.Data))
 		if callback, ok := this.callbacks[update.CallbackQuery.Data]; ok {
 			callback.Handle(ctx, loc, update.CallbackQuery)
 		} else {
@@ -76,14 +82,16 @@ func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.U
 	}
 
 	if command, ok := this.commands[update.Message.Command()]; ok {
-		command.Handle(ctx, loc, update.Message)
+		if slices.Contains(allowedCommands, update.Message.Command()) {
+			command.Handle(ctx, loc, update.Message)
+		}
 	} else {
 		cmdHandler := commands.NewDefaultHandler(this.appDeps, this.bot)
 		cmdHandler.Handle(ctx, loc, update.Message)
 	}
 }
 
-func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Update) lang.Localization {
+func (this TelegramHandler) chatIdFromUpdate(update *tgbotapi.Update) int64 {
 	var chatID int64 = 0
 	if update.CallbackQuery != nil {
 		chatID = update.CallbackQuery.From.ID
@@ -91,6 +99,11 @@ func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Upda
 	if update.Message != nil {
 		chatID = update.Message.Chat.ID
 	}
+	return chatID
+}
+
+func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Update) lang.Localization {
+	chatID := this.chatIdFromUpdate(update)
 	if chatID == 0 {
 		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
 	}
@@ -102,4 +115,16 @@ func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Upda
 	}
 
 	return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), userSettings.Lang)
+}
+
+func (this TelegramHandler) obtainAllowedCommands(ctx context.Context, update *tgbotapi.Update) ([]string, error) {
+	chatID := this.chatIdFromUpdate(update)
+	if chatID == 0 {
+		return nil, nil
+	}
+	allowedCommands, err := this.userService.GetUserAllowedCommands(ctx, chatID)
+	if err != nil {
+		return nil, err
+	}
+	return allowedCommands, nil
 }

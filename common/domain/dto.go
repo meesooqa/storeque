@@ -26,3 +26,10 @@ type UserSettings struct {
 	Role   *Role
 	Lang   string
 }
+
+type Command struct {
+	ID     int64
+	Code   string
+	RoleID int64
+	Role   *Role
+}
