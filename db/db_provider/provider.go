@@ -9,10 +9,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type DBProvider interface {
-	Connect() (*sql.DB, error)
-}
-
 type DefaultDBProvider struct {
 	db *sql.DB
 }
