@@ -43,6 +43,8 @@ func (this *LangEnHandler) Handle(ctx context.Context, loc lang.Localization, ca
 		return
 	}
 
+	loc.SetLang(domain.UserSettingsLangValueEn)
+
 	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.en", nil)))
 	// Remove loading animation
 	this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, ""))

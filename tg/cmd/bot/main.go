@@ -5,7 +5,6 @@ import (
 	"log"
 	"log/slog"
 	"os"
-	"time"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
@@ -18,8 +17,10 @@ import (
 func main() {
 	appDeps := app.GetInstance()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	// TODO context: 10s crashes
+	//ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	//defer cancel()
+	ctx := context.Background()
 
 	db, err := appDeps.DBProvider().Connect()
 	if err != nil {

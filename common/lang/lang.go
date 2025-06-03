@@ -16,6 +16,7 @@ func RegisterModuleTranslations(reg func(*i18n.Bundle)) {
 
 type UserLang struct {
 	logger    *slog.Logger
+	bundle    *i18n.Bundle
 	localizer *i18n.Localizer
 }
 
@@ -31,8 +32,14 @@ func NewBundle() *i18n.Bundle {
 func NewUserLang(logger *slog.Logger, bundle *i18n.Bundle, userLangTag string) Localization {
 	return &UserLang{
 		logger:    logger,
+		bundle:    bundle,
 		localizer: i18n.NewLocalizer(bundle, userLangTag),
 	}
+}
+
+func (this *UserLang) SetLang(userLangTag string) Localization {
+	this.localizer = i18n.NewLocalizer(this.bundle, userLangTag)
+	return this
 }
 
 func (this *UserLang) Localize(id string, tmplData map[string]string) string {

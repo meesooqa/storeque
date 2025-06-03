@@ -43,6 +43,8 @@ func (this *LangRuHandler) Handle(ctx context.Context, loc lang.Localization, ca
 		return
 	}
 
+	loc.SetLang(domain.UserSettingsLangValueRu)
+
 	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.ru", nil)))
 	// Remove loading animation
 	this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, ""))
