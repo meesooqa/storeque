@@ -1,9 +1,8 @@
 package domain
 
 const (
-	UserSettingsLangValueDefault = "en"
-	UserSettingsLangValueEn      = "en"
-	UserSettingsLangValueRu      = "ru"
+	UserSettingsLangValueEn = "en"
+	UserSettingsLangValueRu = "ru"
 )
 
 type User struct {

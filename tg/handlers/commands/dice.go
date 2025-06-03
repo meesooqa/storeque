@@ -7,6 +7,7 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 )
 
 type DiceHandler struct {
@@ -22,15 +23,15 @@ func NewDiceHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DiceHandler {
 	}
 }
 
-func (o *DiceHandler) GetName() string {
+func (o DiceHandler) GetName() string {
 	return "dice"
 }
 
-func (o *DiceHandler) GetDescription() string {
-	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+func (o DiceHandler) GetDescription(loc lang.Localization) string {
+	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *DiceHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
+func (o *DiceHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewDice(inputMessage.Chat.ID) // 1-6
 	// msg := tgbotapi.NewDiceWithEmoji(inputMessage.Chat.ID, "🎰") // 1-64
 	msg.ReplyParameters.MessageID = inputMessage.MessageID

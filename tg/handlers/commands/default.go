@@ -6,6 +6,7 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 )
 
 type DefaultHandler struct {
@@ -21,15 +22,15 @@ func NewDefaultHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DefaultHandler {
 	}
 }
 
-func (o *DefaultHandler) GetName() string {
+func (o DefaultHandler) GetName() string {
 	return ""
 }
 
-func (o *DefaultHandler) GetDescription() string {
+func (o DefaultHandler) GetDescription(loc lang.Localization) string {
 	return ""
 }
 
-func (o *DefaultHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
+func (o *DefaultHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	// TODO o.appDeps.Lang.Localize()
 	text := "Неизвестная команда. Используйте /help для получения списка команд."
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, text)

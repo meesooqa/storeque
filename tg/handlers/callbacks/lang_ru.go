@@ -9,6 +9,7 @@ import (
 
 	"tg-star-shop-bot-001/common/app"
 	"tg-star-shop-bot-001/common/domain"
+	"tg-star-shop-bot-001/common/lang"
 	"tg-star-shop-bot-001/service/userservice"
 )
 
@@ -31,18 +32,18 @@ func (this *LangRuHandler) GetData() string {
 	return fmt.Sprintf("lang-%s", domain.UserSettingsLangValueRu)
 }
 
-func (this *LangRuHandler) Handle(ctx context.Context, callbackQuery *tgbotapi.CallbackQuery) {
+func (this *LangRuHandler) Handle(ctx context.Context, loc lang.Localization, callbackQuery *tgbotapi.CallbackQuery) {
 	chatID := callbackQuery.Message.Chat.ID
 
 	err := this.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueRu)
 	if err != nil {
 		this.appDeps.Logger().Error("LangRuHandler", slog.Any("error", err))
 		// Remove loading animation and show popup message
-		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, this.appDeps.Lang().Localize("tg.error.updatelang", nil)))
+		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, loc.Localize("tg.error.updatelang", nil)))
 		return
 	}
 
-	this.bot.Send(tgbotapi.NewMessage(chatID, this.appDeps.Lang().Localize("tg.clbk.lang.ru", nil)))
+	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.ru", nil)))
 	// Remove loading animation
 	this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, ""))
 }

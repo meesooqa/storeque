@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 )
 
 type BuyHandler struct {
@@ -23,15 +24,15 @@ func NewBuyHandler(appDeps app.App, bot *tgbotapi.BotAPI) *BuyHandler {
 	}
 }
 
-func (o *BuyHandler) GetName() string {
+func (o BuyHandler) GetName() string {
 	return "buy"
 }
 
-func (o *BuyHandler) GetDescription() string {
-	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+func (o BuyHandler) GetDescription(loc lang.Localization) string {
+	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *BuyHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
+func (o *BuyHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	// TODO o.appDeps.Lang.Localize()
 	// TODO promocode
 	product := struct {

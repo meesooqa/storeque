@@ -6,17 +6,19 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 	"tg-star-shop-bot-001/service/userservice"
 )
 
 type CommandHandler interface {
-	Handle(context.Context, *tgbotapi.Message)
+	Handle(context.Context, lang.Localization, *tgbotapi.Message)
 	GetName() string
-	GetDescription() string
+	GetDescription(loc lang.Localization) string
 }
 
 type BaseHandler struct {
 	bot     *tgbotapi.BotAPI
+	loc     lang.Localization
 	appDeps app.App
 }
 

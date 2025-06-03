@@ -54,6 +54,6 @@ func main() {
 	updates := bot.GetUpdatesChan(u)
 	handler := handlers.NewTelegramHandler(appDeps, bot, userService)
 	for update := range updates {
-		handler.HandleUpdate(ctx, update)
+		handler.HandleUpdate(ctx, &update)
 	}
 }

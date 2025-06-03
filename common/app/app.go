@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/joho/godotenv"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 
 	"tg-star-shop-bot-001/common/common_log"
 	"tg-star-shop-bot-001/common/config"
@@ -19,8 +20,8 @@ import (
 type appDeps struct {
 	config     *config.AppConfig
 	logger     *slog.Logger
-	lang       lang.Localization
-	dbprovider db_provider.DBProvider
+	langBundle *i18n.Bundle
+	dbProvider db_provider.DBProvider
 }
 
 var (
@@ -48,53 +49,25 @@ func GetInstance() App {
 		app = &appDeps{
 			config:     conf,
 			logger:     logger,
-			lang:       lang.NewLang(logger, conf.System.DefaultLangTag),
-			dbprovider: db_provider.NewDefaultDBProvider(),
+			langBundle: lang.NewBundle(),
+			dbProvider: db_provider.NewDefaultDBProvider(),
 		}
 	})
 	return app
 }
 
-func (a *appDeps) ChangeLang(langTag string) {
-	a.lang = lang.NewLang(a.Logger(), langTag)
+func (this *appDeps) Config() *config.AppConfig {
+	return this.config
 }
 
-func (a *appDeps) Config() *config.AppConfig {
-	return a.config
+func (this *appDeps) Logger() *slog.Logger {
+	return this.logger
 }
 
-func (a *appDeps) Logger() *slog.Logger {
-	return a.logger
+func (this *appDeps) LangBundle() *i18n.Bundle {
+	return this.langBundle
 }
 
-func (a *appDeps) Lang() lang.Localization {
-	return a.lang
+func (this *appDeps) DBProvider() db_provider.DBProvider {
+	return this.dbProvider
 }
-
-func (a *appDeps) DBProvider() db_provider.DBProvider {
-	return a.dbprovider
-}
-
-/*func NewAppDeps() *AppDeps {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	cp := config.NewDefaultConfigProvider()
-	conf, err := cp.GetAppConfig()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	lp := common_log.NewConsoleLoggerProvider(conf.Log)
-	logger, cleanup := lp.GetLogger()
-	defer cleanup()
-
-	return &AppDeps{
-		Config:     conf,
-		Logger:     logger,
-		Lang:       lang.NewLang(logger, conf.System.DefaultLangTag),
-		DBProvider: db_provider.NewDefaultDBProvider(),
-	}
-}*/

@@ -14,34 +14,34 @@ func RegisterModuleTranslations(reg func(*i18n.Bundle)) {
 	moduleRegistrators = append(moduleRegistrators, reg)
 }
 
-type Lang struct {
-	LangTag   string
+type UserLang struct {
 	logger    *slog.Logger
 	localizer *i18n.Localizer
 }
 
-func NewLang(logger *slog.Logger, langTag string) *Lang {
+func NewBundle() *i18n.Bundle {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
-
 	for _, reg := range moduleRegistrators {
 		reg(bundle)
 	}
+	return bundle
+}
 
-	return &Lang{
-		LangTag:   langTag,
+func NewUserLang(logger *slog.Logger, bundle *i18n.Bundle, userLangTag string) Localization {
+	return &UserLang{
 		logger:    logger,
-		localizer: i18n.NewLocalizer(bundle, langTag),
+		localizer: i18n.NewLocalizer(bundle, userLangTag),
 	}
 }
 
-func (o *Lang) Localize(id string, tmplData map[string]string) string {
-	text, err := o.localizer.Localize(&i18n.LocalizeConfig{
+func (this *UserLang) Localize(id string, tmplData map[string]string) string {
+	text, err := this.localizer.Localize(&i18n.LocalizeConfig{
 		MessageID:    id,
 		TemplateData: tmplData,
 	})
 	if err != nil {
-		o.logger.Error("i18n error", slog.Any("err", err))
+		this.logger.Error("i18n error", slog.Any("error", err))
 		text = id
 	}
 	return text

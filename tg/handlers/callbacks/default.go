@@ -6,6 +6,7 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 )
 
 type DefaultHandler struct {
@@ -25,13 +26,6 @@ func (o *DefaultHandler) GetData() string {
 	return ""
 }
 
-func (o *DefaultHandler) GetText() string {
-	return ""
-}
-
-func (o *DefaultHandler) Render() {
-}
-
-func (o *DefaultHandler) Handle(ctx context.Context, callbackQuery *tgbotapi.CallbackQuery) {
+func (o *DefaultHandler) Handle(ctx context.Context, loc lang.Localization, callbackQuery *tgbotapi.CallbackQuery) {
 	o.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, "Default Callback Handler"))
 }

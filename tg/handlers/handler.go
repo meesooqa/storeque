@@ -7,6 +7,7 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
 	"tg-star-shop-bot-001/common/app"
+	"tg-star-shop-bot-001/common/lang"
 	"tg-star-shop-bot-001/service/userservice"
 	"tg-star-shop-bot-001/tg/handlers/callbacks"
 	"tg-star-shop-bot-001/tg/handlers/commands"
@@ -24,27 +25,31 @@ func getCallbackHandlers(appDeps app.App, bot *tgbotapi.BotAPI, userService *use
 }
 
 type TelegramHandler struct {
-	commands  map[string]commands.CommandHandler
-	callbacks map[string]callbacks.CallbackHandler
-	bot       *tgbotapi.BotAPI
-	appDeps   app.App
+	commands    map[string]commands.CommandHandler
+	callbacks   map[string]callbacks.CallbackHandler
+	userService *userservice.Service
+	bot         *tgbotapi.BotAPI
+	appDeps     app.App
 }
 
 func NewTelegramHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
 	return &TelegramHandler{
-		commands:  getCommandHandlers(appDeps, bot, userService),
-		callbacks: getCallbackHandlers(appDeps, bot, userService),
-		bot:       bot,
-		appDeps:   appDeps,
+		commands:    getCommandHandlers(appDeps, bot, userService),
+		callbacks:   getCallbackHandlers(appDeps, bot, userService),
+		userService: userService,
+		bot:         bot,
+		appDeps:     appDeps,
 	}
 }
 
-func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Update) {
+func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.Update) {
 	defer func() {
 		if panicValue := recover(); panicValue != nil {
-			o.appDeps.Logger().Info("recovered from panic", slog.Any("panicValue", panicValue))
+			this.appDeps.Logger().Info("recovered from panic", slog.Any("panicValue", panicValue))
 		}
 	}()
+
+	loc := this.obtainLoc(ctx, update)
 
 	//if !CheckAuthorizedUser(update.Message.From.ID) {
 	//	return
@@ -56,12 +61,12 @@ func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Upda
 		return
 	}*/
 	if update.CallbackQuery != nil {
-		o.appDeps.Logger().Info("clbk data", slog.String("data", update.CallbackQuery.Data))
-		if callback, ok := o.callbacks[update.CallbackQuery.Data]; ok {
-			callback.Handle(ctx, update.CallbackQuery)
+		this.appDeps.Logger().Info("clbk data", slog.String("data", update.CallbackQuery.Data))
+		if callback, ok := this.callbacks[update.CallbackQuery.Data]; ok {
+			callback.Handle(ctx, loc, update.CallbackQuery)
 		} else {
-			clbkHandler := callbacks.NewDefaultHandler(o.appDeps, o.bot)
-			clbkHandler.Handle(ctx, update.CallbackQuery)
+			clbkHandler := callbacks.NewDefaultHandler(this.appDeps, this.bot)
+			clbkHandler.Handle(ctx, loc, update.CallbackQuery)
 		}
 		return
 	}
@@ -70,10 +75,31 @@ func (o *TelegramHandler) HandleUpdate(ctx context.Context, update tgbotapi.Upda
 		return
 	}
 
-	if command, ok := o.commands[update.Message.Command()]; ok {
-		command.Handle(ctx, update.Message)
+	if command, ok := this.commands[update.Message.Command()]; ok {
+		command.Handle(ctx, loc, update.Message)
 	} else {
-		cmdHandler := commands.NewDefaultHandler(o.appDeps, o.bot)
-		cmdHandler.Handle(ctx, update.Message)
+		cmdHandler := commands.NewDefaultHandler(this.appDeps, this.bot)
+		cmdHandler.Handle(ctx, loc, update.Message)
 	}
+}
+
+func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Update) lang.Localization {
+	var chatID int64 = 0
+	if update.CallbackQuery != nil {
+		chatID = update.CallbackQuery.From.ID
+	}
+	if update.Message != nil {
+		chatID = update.Message.Chat.ID
+	}
+	if chatID == 0 {
+		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+	}
+
+	userSettings, err := this.userService.GetUserSettings(ctx, chatID)
+	if err != nil {
+		this.appDeps.Logger().Error("TelegramHandler-GetUserSettings", slog.Any("error", err))
+		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+	}
+
+	return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), userSettings.Lang)
 }

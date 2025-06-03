@@ -10,6 +10,7 @@ import (
 
 	"tg-star-shop-bot-001/common/app"
 	"tg-star-shop-bot-001/common/domain"
+	"tg-star-shop-bot-001/common/lang"
 	"tg-star-shop-bot-001/service/userservice"
 )
 
@@ -28,15 +29,15 @@ func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userser
 	}
 }
 
-func (o *StartHandler) GetName() string {
+func (o StartHandler) GetName() string {
 	return "start"
 }
 
-func (o *StartHandler) GetDescription() string {
-	return o.appDeps.Lang().Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
+func (o StartHandler) GetDescription(loc lang.Localization) string {
+	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *StartHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Message) {
+func (o *StartHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	// TODO langTag from user config
 	//  "Welcome, {{.UserName}}!"
 	//  "Use /help to see commands list."
@@ -55,7 +56,7 @@ func (o *StartHandler) Handle(ctx context.Context, inputMessage *tgbotapi.Messag
 	err := o.userService.Register(ctx, user)
 	if err != nil {
 		o.appDeps.Logger().Error("register error", slog.Any("error", err))
-		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, o.appDeps.Lang().Localize("tg.error.register", nil))
+		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, loc.Localize("tg.error.register", nil))
 		o.bot.Send(msg)
 		return
 	}
