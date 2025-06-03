@@ -15,9 +15,8 @@ type CallbackHandler interface {
 }
 
 type BaseHandler struct {
-	bot      *tgbotapi.BotAPI
-	appDeps  app.App
-	children []CallbackHandler
+	bot     *tgbotapi.BotAPI
+	appDeps app.App
 }
 
 // GetAll returns list of all callbacks
