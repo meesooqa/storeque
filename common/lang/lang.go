@@ -14,10 +14,6 @@ func RegisterModuleTranslations(reg func(*i18n.Bundle)) {
 	moduleRegistrators = append(moduleRegistrators, reg)
 }
 
-type Localization interface {
-	Localize(id string, tmplData map[string]string) string
-}
-
 type Lang struct {
 	LangTag   string
 	logger    *slog.Logger

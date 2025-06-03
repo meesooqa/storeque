@@ -9,10 +9,6 @@ import (
 	"tg-star-shop-bot-001/common/config"
 )
 
-type LoggerProvider interface {
-	GetLogger() (*slog.Logger, func())
-}
-
 type ConsoleLoggerProvider struct {
 	conf *config.LogConfig
 }

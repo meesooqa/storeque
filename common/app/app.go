@@ -16,14 +16,6 @@ import (
 	_ "tg-star-shop-bot-001/tg"
 )
 
-type App interface {
-	ChangeLang(langTag string)
-	Config() *config.AppConfig
-	Logger() *slog.Logger
-	Lang() lang.Localization
-	DBProvider() db_provider.DBProvider
-}
-
 type appDeps struct {
 	config     *config.AppConfig
 	logger     *slog.Logger

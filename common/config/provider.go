@@ -2,10 +2,6 @@ package config
 
 type LoadConfigFunc func(string) (*AppConfig, error)
 
-type ConfigProvider interface {
-	GetAppConfig() (res *AppConfig, err error)
-}
-
 type DefaultConfigProvider struct {
 	fname    string
 	loadFunc LoadConfigFunc
