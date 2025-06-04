@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS role_commands;
-DROP TABLE IF EXISTS commands;
