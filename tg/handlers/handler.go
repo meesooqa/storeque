@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"context"
+	"fmt"
+	"github.com/meesooqa/storeque/common/domain"
 	"log/slog"
 	"slices"
 
@@ -39,16 +41,17 @@ func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.U
 		}
 	}()
 
+	if err := this.register(ctx, update); err != nil {
+		this.appDeps.Logger().Error("HandleUpdate-register", slog.Any("error", err))
+		return
+	}
+
 	loc := this.obtainLoc(ctx, update)
 	allowedCommands, err := this.obtainAllowedCommands(ctx, update)
 	if err != nil {
 		this.appDeps.Logger().Error("HandleUpdate-allowedCommands", slog.Any("error", err))
 		return
 	}
-
-	//if !CheckAuthorizedUser(update.Message.From.ID) {
-	//	return
-	//}
 
 	// TODO SuccessfulPayment
 	/*if update.Message.SuccessfulPayment != nil {
@@ -95,6 +98,26 @@ func (this TelegramHandler) chatIdFromUpdate(update *tgbotapi.Update) int64 {
 	return chatID
 }
 
+// TODO cache
+func (this TelegramHandler) register(ctx context.Context, update *tgbotapi.Update) error {
+	if update.Message == nil {
+		return fmt.Errorf("message is nil")
+	}
+
+	user := &domain.User{
+		ChatID: update.Message.From.ID,
+		// TelegramID: update.Message.From.ID,
+		Username:  update.Message.From.UserName,
+		FirstName: update.Message.From.FirstName,
+		LastName:  update.Message.From.LastName,
+	}
+	err := this.userService.Register(ctx, user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Update) lang.Localization {
 	chatID := this.chatIdFromUpdate(update)
 	if chatID == 0 {
@@ -104,6 +127,9 @@ func (this TelegramHandler) obtainLoc(ctx context.Context, update *tgbotapi.Upda
 	userSettings, err := this.userService.GetUserSettings(ctx, chatID)
 	if err != nil {
 		this.appDeps.Logger().Error("TelegramHandler-GetUserSettings", slog.Any("error", err))
+		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+	}
+	if userSettings == nil || userSettings.Lang == "" {
 		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
 	}
 

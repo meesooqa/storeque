@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
-
 	"github.com/meesooqa/storeque/common/domain"
 	"github.com/meesooqa/storeque/db/entities"
 )
@@ -33,7 +31,6 @@ func (o *UserRepository) FindByChatID(ctx context.Context, chatID int64) (*domai
 	row := o.db.QueryRowContext(ctx, query, chatID)
 	item := &entities.User{}
 	if err := row.Scan(&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.TelegramID, &item.ChatID, &item.Username, &item.FirstName, &item.LastName); err != nil {
-		log.Printf("UserRepo::FindByChatID: %s", err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil // ErrNotFound
 		}
