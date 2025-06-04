@@ -1,27 +1,21 @@
 {
-  "tg": {
-    "cmd": {
-      "start": { "description": "Показать Меню." },
-      "help": { "description": "Показать эту справку." },
-      "settings": {
-        "description": "Настройки.",
-        "title": "Ваши настройки",
-        "lang": "Язык",
-        "role": "Роль"
-      },
-      "dice": { "description": "Бросить игральную кость." },
-      "buy": { "description": "Купить товар." }
-    },
-    "clbk": {
-      "lang": {
-        "ru": "Выбран русский язык \uD83C\uDF89",
-        "en": "Выбран английский язык \uD83C\uDF89"
-      }
-    },
-    "error": {
-      "getusersettings": "Ошибка при получении списка настроек.",
-      "updatelang": "Ошибка при сохранении настроек языка.",
-      "register": "Ошибка при регистрации."
-    }
-  }
+  "tg.cmd.start.description": "Показать Меню.",
+  "tg.cmd.start.welcome": "Welcome, {{.UserName}}!\nUse /help to see commands list.",
+
+  "tg.cmd.help.description": "Показать эту справку.",
+
+  "tg.cmd.settings.description": "Настройки.",
+  "tg.cmd.settings.title": "Ваши настройки",
+  "tg.cmd.settings.lang": "Язык",
+  "tg.cmd.settings.role": "Роль",
+
+  "tg.cmd.dice.description": "Бросить игральную кость.",
+  "tg.cmd.buy.description": "Купить товар.",
+
+  "tg.clbk.lang.ru": "Выбран русский язык \uD83C\uDF89",
+  "tg.clbk.lang.en": "Выбран английский язык \uD83C\uDF89",
+
+  "tg.error.getusersettings": "Ошибка при получении списка настроек.",
+  "tg.error.updatelang": "Ошибка при сохранении настроек языка.",
+  "tg.error.register": "Ошибка при регистрации."
 }

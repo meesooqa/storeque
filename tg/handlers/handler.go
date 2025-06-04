@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/meesooqa/storeque/common/domain"
 	"log/slog"
 	"slices"
@@ -101,7 +100,8 @@ func (this TelegramHandler) chatIdFromUpdate(update *tgbotapi.Update) int64 {
 // TODO cache
 func (this TelegramHandler) register(ctx context.Context, update *tgbotapi.Update) error {
 	if update.Message == nil {
-		return fmt.Errorf("message is nil")
+		//return fmt.Errorf("message is nil")
+		return nil
 	}
 
 	user := &domain.User{
