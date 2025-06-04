@@ -14,17 +14,6 @@ import (
 	"tg-star-shop-bot-001/tg/handlers/commands"
 )
 
-func getCommandHandlers(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]commands.CommandHandler {
-	// TODO filter by UserGroup
-	handlersMap := commands.GetAll(appDeps, bot, userService)
-	return handlersMap
-}
-
-func getCallbackHandlers(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]callbacks.CallbackHandler {
-	handlersMap := callbacks.GetAll(appDeps, bot, userService)
-	return handlersMap
-}
-
 type TelegramHandler struct {
 	commands    map[string]commands.CommandHandler
 	callbacks   map[string]callbacks.CallbackHandler
@@ -35,8 +24,8 @@ type TelegramHandler struct {
 
 func NewTelegramHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *TelegramHandler {
 	return &TelegramHandler{
-		commands:    getCommandHandlers(appDeps, bot, userService),
-		callbacks:   getCallbackHandlers(appDeps, bot, userService),
+		commands:    commands.GetAll(appDeps, bot, userService),
+		callbacks:   callbacks.GetAll(appDeps, bot, userService),
 		userService: userService,
 		bot:         bot,
 		appDeps:     appDeps,
