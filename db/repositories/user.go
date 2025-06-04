@@ -6,8 +6,8 @@ import (
 	"errors"
 	"log"
 
-	"tg-star-shop-bot-001/common/domain"
-	"tg-star-shop-bot-001/db/entities"
+	"github.com/meesooqa/tg-star-shop-bot/common/domain"
+	"github.com/meesooqa/tg-star-shop-bot/db/entities"
 )
 
 type UserRepository struct {

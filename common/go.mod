@@ -1,4 +1,4 @@
-module tg-star-shop-bot-001/common
+module github.com/meesooqa/tg-star-shop-bot/common
 
 go 1.24.1
 

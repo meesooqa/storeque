@@ -1,4 +1,4 @@
-module tg-star-shop-bot-001/tg
+module github.com/meesooqa/tg-star-shop-bot/tg
 
 go 1.24.1
 

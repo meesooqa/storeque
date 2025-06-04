@@ -7,8 +7,8 @@ import (
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 	"github.com/google/uuid"
 
-	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/common/lang"
+	"github.com/meesooqa/tg-star-shop-bot/common/app"
+	"github.com/meesooqa/tg-star-shop-bot/common/lang"
 )
 
 type BuyHandler struct {

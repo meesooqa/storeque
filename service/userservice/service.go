@@ -3,7 +3,7 @@ package userservice
 import (
 	"context"
 
-	"tg-star-shop-bot-001/common/domain"
+	"github.com/meesooqa/tg-star-shop-bot/common/domain"
 )
 
 type Service struct {

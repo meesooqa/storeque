@@ -4,8 +4,8 @@ import (
 	"embed"
 	"log/slog"
 
-	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/db/migration"
+	"github.com/meesooqa/tg-star-shop-bot/common/app"
+	"github.com/meesooqa/tg-star-shop-bot/db/migration"
 )
 
 //go:embed migrations/*.sql

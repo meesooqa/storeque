@@ -8,13 +8,13 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"tg-star-shop-bot-001/common/common_log"
-	"tg-star-shop-bot-001/common/config"
-	"tg-star-shop-bot-001/common/lang"
-	"tg-star-shop-bot-001/db/db_provider"
+	"github.com/meesooqa/tg-star-shop-bot/common/common_log"
+	"github.com/meesooqa/tg-star-shop-bot/common/config"
+	"github.com/meesooqa/tg-star-shop-bot/common/lang"
+	"github.com/meesooqa/tg-star-shop-bot/db/db_provider"
 
 	// Load lang phrases
-	_ "tg-star-shop-bot-001/tg"
+	_ "github.com/meesooqa/tg-star-shop-bot/tg"
 )
 
 type appDeps struct {

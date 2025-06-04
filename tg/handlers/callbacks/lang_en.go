@@ -7,10 +7,10 @@ import (
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
-	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/common/domain"
-	"tg-star-shop-bot-001/common/lang"
-	"tg-star-shop-bot-001/service/userservice"
+	"github.com/meesooqa/tg-star-shop-bot/common/app"
+	"github.com/meesooqa/tg-star-shop-bot/common/domain"
+	"github.com/meesooqa/tg-star-shop-bot/common/lang"
+	"github.com/meesooqa/tg-star-shop-bot/service/userservice"
 )
 
 type LangEnHandler struct {

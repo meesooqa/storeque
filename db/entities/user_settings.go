@@ -3,7 +3,7 @@ package entities
 import (
 	"time"
 
-	"tg-star-shop-bot-001/common/domain"
+	"github.com/meesooqa/tg-star-shop-bot/common/domain"
 )
 
 type UserSettings struct {
