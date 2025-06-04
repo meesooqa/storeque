@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"tg-star-shop-bot-001/common/config"
+	"github.com/meesooqa/storeque/common/config"
 )
 
 type ConsoleLoggerProvider struct {

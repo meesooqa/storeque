@@ -1,4 +1,4 @@
-module tg-star-shop-bot-001/db
+module github.com/meesooqa/storeque/db
 
 go 1.24.1
 

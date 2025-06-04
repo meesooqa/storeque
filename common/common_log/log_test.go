@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"tg-star-shop-bot-001/common/config"
+	"github.com/meesooqa/storeque/common/config"
 )
 
 func TestNewConsoleLoggerProvider(t *testing.T) {

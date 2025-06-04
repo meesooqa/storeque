@@ -7,8 +7,8 @@ import (
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
-	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/common/lang"
+	"github.com/meesooqa/storeque/common/app"
+	"github.com/meesooqa/storeque/common/lang"
 )
 
 type HelpHandler struct {

@@ -1,3 +1,3 @@
-module tg-star-shop-bot-001/service/userservice
+module github.com/meesooqa/storeque/service/userservice
 
 go 1.24.1

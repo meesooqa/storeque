@@ -6,7 +6,7 @@ import (
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"tg-star-shop-bot-001/common/lang"
+	"github.com/meesooqa/storeque/common/lang"
 )
 
 //go:embed locales/*.json

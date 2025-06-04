@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"tg-star-shop-bot-001/common/domain"
-	"tg-star-shop-bot-001/db/entities"
+	"github.com/meesooqa/storeque/common/domain"
+	"github.com/meesooqa/storeque/db/entities"
 )
 
 type CommandRepository struct {

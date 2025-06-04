@@ -8,10 +8,10 @@ import (
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
-	"tg-star-shop-bot-001/common/app"
-	"tg-star-shop-bot-001/db/repositories"
-	"tg-star-shop-bot-001/service/userservice"
-	"tg-star-shop-bot-001/tg/handlers"
+	"github.com/meesooqa/storeque/common/app"
+	"github.com/meesooqa/storeque/db/repositories"
+	"github.com/meesooqa/storeque/service/userservice"
+	"github.com/meesooqa/storeque/tg/handlers"
 )
 
 func main() {
