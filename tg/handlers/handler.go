@@ -81,8 +81,12 @@ func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.U
 		return
 	}
 
-	if command, ok := this.commands[update.Message.Command()]; ok {
-		if slices.Contains(allowedCommands, update.Message.Command()) {
+	commandName := update.Message.Command()
+	if command, ok := this.commands[commandName]; ok {
+		if slices.Contains(allowedCommands, commandName) {
+			if commandName == "help" {
+				command.(*commands.HelpHandler).SetAllowedCommands(allowedCommands)
+			}
 			command.Handle(ctx, loc, update.Message)
 		}
 	} else {

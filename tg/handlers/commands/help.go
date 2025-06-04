@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
 
@@ -12,7 +13,8 @@ import (
 
 type HelpHandler struct {
 	BaseHandler
-	availableCommands []CommandHandler
+	allowedCommands []string
+	commands        []CommandHandler
 }
 
 func NewHelpHandler(appDeps app.App, bot *tgbotapi.BotAPI) *HelpHandler {
@@ -24,16 +26,20 @@ func NewHelpHandler(appDeps app.App, bot *tgbotapi.BotAPI) *HelpHandler {
 	}
 }
 
-func (o HelpHandler) GetName() string {
+func (o *HelpHandler) GetName() string {
 	return "help"
 }
 
-func (o HelpHandler) GetDescription(loc lang.Localization) string {
+func (o *HelpHandler) GetDescription(loc lang.Localization) string {
 	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *HelpHandler) SetAvailableCommands(availableCommands []CommandHandler) {
-	o.availableCommands = availableCommands
+func (o *HelpHandler) SetCommands(commands []CommandHandler) {
+	o.commands = commands
+}
+
+func (o *HelpHandler) SetAllowedCommands(allowedCommands []string) {
+	o.allowedCommands = allowedCommands
 }
 
 func (o *HelpHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
@@ -43,7 +49,10 @@ func (o *HelpHandler) Handle(ctx context.Context, loc lang.Localization, inputMe
 	text += "*Доступные команды:*"
 	text += "\n\n"
 
-	for _, cmd := range o.availableCommands {
+	for _, cmd := range o.commands {
+		if !slices.Contains(o.allowedCommands, cmd.GetName()) {
+			continue
+		}
 		cmdHelpLine := fmt.Sprintf("• /%s — %s\n", cmd.GetName(), cmd.GetDescription(loc))
 		text += cmdHelpLine
 	}
