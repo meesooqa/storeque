@@ -32,7 +32,7 @@ func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Serv
 		NewBuyHandler(appDeps, bot),
 		NewDiceHandler(appDeps, bot),
 	}
-	help.SetCommands(list)
+	help.SetCommands(list) // all commands. Search "SetAllowedCommands"
 
 	handlersMap := make(map[string]CommandHandler)
 	for _, item := range list {

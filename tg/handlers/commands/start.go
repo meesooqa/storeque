@@ -39,7 +39,7 @@ func (o *StartHandler) Handle(ctx context.Context, loc lang.Localization, inputM
 	} else if inputMessage.From.LastName != "" {
 		userName = inputMessage.From.LastName
 	} else {
-		userName = "User"
+		userName = "User" // TODO configurable default name
 	}
 	userName = inputMessage.From.FirstName
 	welcomeText := loc.Localize("tg.cmd.start.welcome", map[string]string{
