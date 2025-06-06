@@ -40,7 +40,6 @@ github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
-github.com/mattn/go-sqlite3 v1.14.28 h1:ThEiQrnbtumT+QMknw63Befp/ce/nUPgBPMlRFEum7A=
 github.com/meesooqa/storeque/common v0.0.0-20250604073154-30443755c57c h1:iKyMkFUp/DLyax4rCbF1ZExWxm3Kn7yGyf7P1q0lN24=
 github.com/meesooqa/storeque/common v0.0.0-20250604073154-30443755c57c/go.mod h1:UHJGOe5SywbwEVfXeLLTBQ5HVtatojU+rpTssbk5rVc=
 github.com/meesooqa/storeque/tg v0.0.0-20250604073154-30443755c57c h1:99J3QFw/FCCGUfxe2dKuzZ79vuz4hvWV8q2COmZSEXU=

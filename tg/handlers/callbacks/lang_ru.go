@@ -15,10 +15,10 @@ import (
 
 type LangRuHandler struct {
 	BaseHandler
-	userService *userservice.Service
+	userService userservice.UserService
 }
 
-func NewLangRuHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *LangRuHandler {
+func NewLangRuHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *LangRuHandler {
 	return &LangRuHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,

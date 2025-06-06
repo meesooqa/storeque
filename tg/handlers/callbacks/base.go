@@ -21,7 +21,7 @@ type BaseHandler struct {
 }
 
 // GetAll returns list of all callbacks
-func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) map[string]CallbackHandler {
+func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) map[string]CallbackHandler {
 	list := []CallbackHandler{
 		NewLangRuHandler(appDeps, bot, userService),
 		NewLangEnHandler(appDeps, bot, userService),

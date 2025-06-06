@@ -15,6 +15,7 @@
   "tg.clbk.lang.ru": "Russian chosen \uD83C\uDF89",
   "tg.clbk.lang.en": "English chosen \uD83C\uDF89",
 
+  "tg.error.commandnotallowed": "Command not allowed for this role.",
   "tg.error.getusersettings": "Getting list of settings error.",
   "tg.error.updatelang": "Saving language settings error.",
   "tg.error.register": "Register error."

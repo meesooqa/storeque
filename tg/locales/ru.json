@@ -15,6 +15,7 @@
   "tg.clbk.lang.ru": "Выбран русский язык \uD83C\uDF89",
   "tg.clbk.lang.en": "Выбран английский язык \uD83C\uDF89",
 
+  "tg.error.commandnotallowed": "Нет прав для выполнения команды.",
   "tg.error.getusersettings": "Ошибка при получении списка настроек.",
   "tg.error.updatelang": "Ошибка при сохранении настроек языка.",
   "tg.error.register": "Ошибка при регистрации."

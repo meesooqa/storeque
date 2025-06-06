@@ -17,7 +17,3 @@ type UserSettingsRepository interface {
 	FindByChatID(ctx context.Context, chatID int64) (*UserSettings, error)
 	UpdateLangByChatID(ctx context.Context, chatID int64, value string) error
 }
-
-type CommandRepository interface {
-	FindByRoleID(ctx context.Context, roleID int64) ([]*Command, error)
-}

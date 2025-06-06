@@ -3,7 +3,9 @@ package commands
 import (
 	"context"
 	"fmt"
+
 	tgbotapi "github.com/OvyFlash/telegram-bot-api"
+
 	"github.com/meesooqa/storeque/common/app"
 	"github.com/meesooqa/storeque/common/lang"
 	"github.com/meesooqa/storeque/service/userservice"
@@ -11,10 +13,10 @@ import (
 
 type StartHandler struct {
 	BaseHandler
-	userService *userservice.Service
+	userService userservice.UserService
 }
 
-func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *StartHandler {
+func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *StartHandler {
 	return &StartHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,

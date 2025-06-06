@@ -14,10 +14,10 @@ import (
 
 type SettingsHandler struct {
 	BaseHandler
-	userService *userservice.Service
+	userService userservice.UserService
 }
 
-func NewSettingsHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService *userservice.Service) *SettingsHandler {
+func NewSettingsHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *SettingsHandler {
 	return &SettingsHandler{
 		BaseHandler: BaseHandler{
 			bot:     bot,

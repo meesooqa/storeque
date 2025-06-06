@@ -10,8 +10,11 @@ import (
 
 	"github.com/meesooqa/storeque/common/app"
 	"github.com/meesooqa/storeque/db/repositories"
+	"github.com/meesooqa/storeque/service/locservice"
+	"github.com/meesooqa/storeque/service/roleservice"
 	"github.com/meesooqa/storeque/service/userservice"
 	"github.com/meesooqa/storeque/tg/handlers"
+	"github.com/meesooqa/storeque/tg/handlers/middleware"
 )
 
 func main() {
@@ -30,8 +33,9 @@ func main() {
 
 	userRepo := repositories.NewUserRepository(db)
 	userSettingsRepo := repositories.NewUserSettingsRepository(db)
-	cmdRepo := repositories.NewCommandRepository(db)
-	userService := userservice.NewService(userRepo, userSettingsRepo, cmdRepo)
+	userService := userservice.NewService(userRepo, userSettingsRepo)
+	locService := locservice.NewService(appDeps, userService)
+	roleService := roleservice.NewService()
 
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
 	apiEndpoint := os.Getenv("TELEGRAM_API_ENDPOINT")
@@ -51,10 +55,16 @@ func main() {
 
 	appDeps.Logger().Info("Authorized", slog.String("Account", bot.Self.UserName))
 
+	updatePreHandlers := []middleware.UpdatePreHandler{
+		middleware.NewRegister(userService),
+	}
+	commandRouter := handlers.NewCommandRouter(appDeps, bot, locService, userService, roleService)
+	callbackRouter := handlers.NewCallbackRouter(appDeps, bot, locService, userService)
+	handler := handlers.NewTelegramHandler(appDeps, bot, updatePreHandlers, commandRouter, callbackRouter)
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
-	handler := handlers.NewTelegramHandler(appDeps, bot, userService)
 	for update := range updates {
 		handler.HandleUpdate(ctx, &update)
 	}
