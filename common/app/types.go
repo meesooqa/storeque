@@ -9,6 +9,7 @@ import (
 	"github.com/meesooqa/storeque/db/db_provider"
 )
 
+// App interface defines the methods to access application-level dependencies
 type App interface {
 	Config() *config.AppConfig
 	Logger() *slog.Logger

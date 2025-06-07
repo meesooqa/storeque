@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"github.com/meesooqa/storeque/common/common_log"
+	"github.com/meesooqa/storeque/common/applog"
 	"github.com/meesooqa/storeque/common/config"
 	"github.com/meesooqa/storeque/common/lang"
 	"github.com/meesooqa/storeque/db/db_provider"
@@ -29,6 +29,7 @@ var (
 	once sync.Once
 )
 
+// GetInstance returns a singleton instance of App
 func GetInstance() App {
 	once.Do(func() {
 		err := godotenv.Load()
@@ -42,7 +43,7 @@ func GetInstance() App {
 			log.Fatal(err)
 		}
 
-		lp := common_log.NewConsoleLoggerProvider(conf.Log)
+		lp := applog.NewConsoleLoggerProvider(conf.Log)
 		logger, cleanup := lp.GetLogger()
 		defer cleanup()
 
@@ -56,18 +57,18 @@ func GetInstance() App {
 	return app
 }
 
-func (this *appDeps) Config() *config.AppConfig {
-	return this.config
+func (o *appDeps) Config() *config.AppConfig {
+	return o.config
 }
 
-func (this *appDeps) Logger() *slog.Logger {
-	return this.logger
+func (o *appDeps) Logger() *slog.Logger {
+	return o.logger
 }
 
-func (this *appDeps) LangBundle() *i18n.Bundle {
-	return this.langBundle
+func (o *appDeps) LangBundle() *i18n.Bundle {
+	return o.langBundle
 }
 
-func (this *appDeps) DBProvider() db_provider.DBProvider {
-	return this.dbProvider
+func (o *appDeps) DBProvider() db_provider.DBProvider {
+	return o.dbProvider
 }

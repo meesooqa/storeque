@@ -1,4 +1,4 @@
-package common_log
+package applog
 
 import (
 	"bytes"
@@ -178,7 +178,7 @@ func TestFileLoggerProvider_GetLogger_FileCreation(t *testing.T) {
 	logPath := filepath.Join(nonExistentDir, "new_file.log")
 
 	// Create the directory
-	err = os.Mkdir(nonExistentDir, 0755)
+	err = os.Mkdir(nonExistentDir, 0o755)
 	require.NoError(t, err)
 
 	// Verify file doesn't exist yet
@@ -211,8 +211,7 @@ func TestLoggerProvider_Interface(t *testing.T) {
 	var providers []LoggerProvider
 
 	conf := &config.LogConfig{Level: slog.LevelInfo, Path: "testdata/test.log"}
-	providers = append(providers, NewConsoleLoggerProvider(conf))
-	providers = append(providers, NewFileLoggerProvider(conf))
+	providers = append(providers, NewConsoleLoggerProvider(conf), NewFileLoggerProvider(conf))
 
 	for i, provider := range providers {
 		logger, cleanup := provider.GetLogger()

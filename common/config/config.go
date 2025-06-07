@@ -36,7 +36,7 @@ type LogConfig struct {
 // load config from file
 func load(fname string) (res *AppConfig, err error) {
 	res = &AppConfig{}
-	data, err := os.ReadFile(fname)
+	data, err := os.ReadFile(fname) // #nosec G304
 	if err != nil {
 		return nil, err
 	}

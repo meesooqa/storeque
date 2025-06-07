@@ -18,7 +18,7 @@ func TestRegisterModuleTranslations_CallsRegistrators(t *testing.T) {
 	moduleRegistrators = nil
 
 	called := false
-	RegisterModuleTranslations(func(b *i18n.Bundle) {
+	RegisterModuleTranslations(func(_ *i18n.Bundle) {
 		called = true
 	})
 
@@ -75,7 +75,7 @@ func TestNewUserLang_InitializesWithProvidedLang(t *testing.T) {
 
 	bundle := NewBundle()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	userLang := NewUserLang(logger, bundle, "ru").(Localization)
+	userLang := NewUserLang(logger, bundle, "ru")
 
 	assert.Equal(t, "Привет", userLang.Localize("hello", nil))
 }
@@ -92,7 +92,7 @@ func TestSetLang_ChangesLanguage(t *testing.T) {
 
 	bundle := NewBundle()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	userLang := NewUserLang(logger, bundle, "en").(Localization)
+	userLang := NewUserLang(logger, bundle, "en")
 
 	assert.Equal(t, "Hello", userLang.Localize("greeting", nil))
 	userLang.SetLang("ru")
@@ -104,14 +104,14 @@ func TestLocalize_ReturnsIDOnError(t *testing.T) {
 	defer func() { moduleRegistrators = oldRegs }()
 	moduleRegistrators = nil
 
-	RegisterModuleTranslations(func(b *i18n.Bundle) {
+	RegisterModuleTranslations(func(_ *i18n.Bundle) {
 		// No messages added
 	})
 
 	bundle := NewBundle()
 	var buf bytes.Buffer
 	logger := slog.New(slog.NewTextHandler(&buf, nil))
-	userLang := NewUserLang(logger, bundle, "en").(Localization)
+	userLang := NewUserLang(logger, bundle, "en")
 
 	id := "unknown"
 	result := userLang.Localize(id, nil)
@@ -134,7 +134,7 @@ func TestLocalize_UsesTemplateData(t *testing.T) {
 
 	bundle := NewBundle()
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	userLang := NewUserLang(logger, bundle, "en").(Localization)
+	userLang := NewUserLang(logger, bundle, "en")
 
 	tmplData := map[string]string{"name": "Alice"}
 	res := userLang.Localize("welcome", tmplData)
