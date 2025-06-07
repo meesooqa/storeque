@@ -9,28 +9,31 @@ import (
 	"github.com/meesooqa/storeque/service/userservice"
 )
 
+// Service implements the LocService interface
 type Service struct {
 	appDeps     app.App
 	userService userservice.UserService
 }
 
+// NewService creates a new instance of Service with the provided dependencies
 func NewService(appDeps app.App, userService userservice.UserService) *Service {
 	return &Service{appDeps: appDeps, userService: userService}
 }
 
-func (this *Service) GetLoc(ctx context.Context, chatID int64) lang.Localization {
+// GetLoc retrieves the localization settings for a given chat ID
+func (o *Service) GetLoc(ctx context.Context, chatID int64) lang.Localization {
 	if chatID == 0 {
-		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+		return lang.NewUserLang(o.appDeps.Logger(), o.appDeps.LangBundle(), o.appDeps.Config().System.DefaultLangTag)
 	}
 
-	userSettings, err := this.userService.GetUserSettings(ctx, chatID)
+	userSettings, err := o.userService.GetUserSettings(ctx, chatID)
 	if err != nil {
-		this.appDeps.Logger().Error("TelegramHandler-GetUserSettings", slog.Any("error", err))
-		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+		o.appDeps.Logger().Error("TelegramHandler-GetUserSettings", slog.Any("error", err))
+		return lang.NewUserLang(o.appDeps.Logger(), o.appDeps.LangBundle(), o.appDeps.Config().System.DefaultLangTag)
 	}
 	if userSettings == nil || userSettings.Lang == "" {
-		return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), this.appDeps.Config().System.DefaultLangTag)
+		return lang.NewUserLang(o.appDeps.Logger(), o.appDeps.LangBundle(), o.appDeps.Config().System.DefaultLangTag)
 	}
 
-	return lang.NewUserLang(this.appDeps.Logger(), this.appDeps.LangBundle(), userSettings.Lang)
+	return lang.NewUserLang(o.appDeps.Logger(), o.appDeps.LangBundle(), userSettings.Lang)
 }
