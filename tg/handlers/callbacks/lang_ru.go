@@ -13,11 +13,13 @@ import (
 	"github.com/meesooqa/storeque/service/userservice"
 )
 
+// LangRuHandler is a callback handler for setting the language to Russian
 type LangRuHandler struct {
 	BaseHandler
 	userService userservice.UserService
 }
 
+// NewLangRuHandler creates a new LangRuHandler with the provided application dependencies, bot API, and user service
 func NewLangRuHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *LangRuHandler {
 	return &LangRuHandler{
 		BaseHandler: BaseHandler{
@@ -28,23 +30,25 @@ func NewLangRuHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userser
 	}
 }
 
-func (this *LangRuHandler) GetData() string {
+// GetData returns the data string associated with this handler, which is used to identify it in callback queries
+func (o *LangRuHandler) GetData() string {
 	return fmt.Sprintf("lang-%s", domain.UserSettingsLangValueRu)
 }
 
-func (this *LangRuHandler) Handle(ctx context.Context, loc lang.Localization, callbackQuery *tgbotapi.CallbackQuery) {
+// Handle processes the callback query to set the user's language to Russian
+func (o *LangRuHandler) Handle(ctx context.Context, loc lang.Localization, callbackQuery *tgbotapi.CallbackQuery) {
 	chatID := callbackQuery.Message.Chat.ID
 
-	err := this.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueRu)
+	err := o.userService.SetChatLang(ctx, chatID, domain.UserSettingsLangValueRu)
 	loc.SetLang(domain.UserSettingsLangValueRu)
 	if err != nil {
-		this.appDeps.Logger().Error("LangRuHandler", slog.Any("error", err))
+		o.appDeps.Logger().Error("LangRuHandler", slog.Any("error", err))
 		// Remove loading animation and show popup message
-		this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, loc.Localize("tg.error.updatelang", nil)))
+		o.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, loc.Localize("tg.error.updatelang", nil))) // nolint
 		return
 	}
 
-	this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.ru", nil)))
+	o.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.clbk.lang.ru", nil))) // nolint
 	// Remove loading animation
-	this.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, ""))
+	o.bot.Send(tgbotapi.NewCallback(callbackQuery.ID, "")) // nolint
 }

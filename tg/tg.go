@@ -5,18 +5,22 @@ import (
 	"fmt"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-
-	"github.com/meesooqa/storeque/common/lang"
 )
 
 //go:embed locales/*.json
 var localeFS embed.FS
 
-func init() {
-	lang.RegisterModuleTranslations(func(bundle *i18n.Bundle) {
-		files, _ := localeFS.ReadDir("locales")
-		for _, f := range files {
-			_, _ = bundle.LoadMessageFileFS(localeFS, fmt.Sprintf("locales/%s", f.Name()))
+// LoadLocales loads translation files from the embedded filesystem into the provided i18n bundle
+func LoadLocales(bundle *i18n.Bundle) error {
+	files, err := localeFS.ReadDir("locales")
+	if err != nil {
+		return err
+	}
+	for _, f := range files {
+		_, err = bundle.LoadMessageFileFS(localeFS, fmt.Sprintf("locales/%s", f.Name()))
+		if err != nil {
+			return err
 		}
-	})
+	}
+	return nil
 }

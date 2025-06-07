@@ -12,9 +12,6 @@ import (
 	"github.com/meesooqa/storeque/common/config"
 	"github.com/meesooqa/storeque/common/lang"
 	"github.com/meesooqa/storeque/db/provider"
-
-	// Load lang phrases
-	_ "github.com/meesooqa/storeque/tg"
 )
 
 type appDeps struct {

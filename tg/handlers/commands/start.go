@@ -11,11 +11,13 @@ import (
 	"github.com/meesooqa/storeque/service/userservice"
 )
 
+// StartHandler handles the /start command in Telegram
 type StartHandler struct {
 	BaseHandler
 	userService userservice.UserService
 }
 
+// NewStartHandler creates a new instance of StartHandler
 func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *StartHandler {
 	return &StartHandler{
 		BaseHandler: BaseHandler{
@@ -26,29 +28,30 @@ func NewStartHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userserv
 	}
 }
 
-func (o StartHandler) GetName() string {
+// GetName returns the name of the command handler
+func (o *StartHandler) GetName() string {
 	return "start"
 }
 
-func (o StartHandler) GetDescription(loc lang.Localization) string {
+// GetDescription returns the description of the command handler
+func (o *StartHandler) GetDescription(loc lang.Localization) string {
 	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (o *StartHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
-	var userName string
-	if inputMessage.From.FirstName != "" {
-		userName = inputMessage.From.FirstName
-	} else if inputMessage.From.LastName != "" {
+// Handle processes the /start command
+func (o *StartHandler) Handle(_ context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
+	userName := inputMessage.From.FirstName
+	if userName == "" {
 		userName = inputMessage.From.LastName
-	} else {
+	}
+	if userName == "" {
 		userName = "User" // TODO configurable default name
 	}
-	userName = inputMessage.From.FirstName
 	welcomeText := loc.Localize("tg.cmd.start.welcome", map[string]string{
 		"UserName": userName,
 	})
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, welcomeText)
-	o.bot.Send(msg)
+	o.bot.Send(msg) // nolint
 
 	keyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
@@ -66,5 +69,5 @@ func (o *StartHandler) Handle(ctx context.Context, loc lang.Localization, inputM
 	)
 	msg = tgbotapi.NewMessage(inputMessage.Chat.ID, "Language:")
 	msg.ReplyMarkup = keyboard
-	o.bot.Send(msg)
+	o.bot.Send(msg) // nolint
 }

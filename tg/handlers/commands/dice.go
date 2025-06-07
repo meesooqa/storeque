@@ -10,10 +10,12 @@ import (
 	"github.com/meesooqa/storeque/common/lang"
 )
 
+// DiceHandler handles the /dice command in the Telegram bot
 type DiceHandler struct {
 	BaseHandler
 }
 
+// NewDiceHandler creates a new instance of DiceHandler with the provided app dependencies and bot API
 func NewDiceHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DiceHandler {
 	return &DiceHandler{
 		BaseHandler{
@@ -23,14 +25,17 @@ func NewDiceHandler(appDeps app.App, bot *tgbotapi.BotAPI) *DiceHandler {
 	}
 }
 
-func (o DiceHandler) GetName() string {
+// GetName returns the name of the command handler
+func (o *DiceHandler) GetName() string {
 	return "dice"
 }
 
-func (o DiceHandler) GetDescription(loc lang.Localization) string {
+// GetDescription returns the localized description of the command handler
+func (o *DiceHandler) GetDescription(loc lang.Localization) string {
 	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
+// Handle processes the /dice command, sending a dice emoji and returning the rolled value
 func (o *DiceHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewDice(inputMessage.Chat.ID) // 1-6
 	// msg := tgbotapi.NewDiceWithEmoji(inputMessage.Chat.ID, "🎰") // 1-64
@@ -39,12 +44,11 @@ func (o *DiceHandler) Handle(ctx context.Context, loc lang.Localization, inputMe
 	sentMsg, err := o.bot.Send(msg)
 	if err != nil {
 		m := tgbotapi.NewMessage(inputMessage.Chat.ID, err.Error())
-		o.bot.Send(m)
+		o.bot.Send(m) // nolint
 		return
-	} else {
-		m := tgbotapi.NewMessage(inputMessage.Chat.ID, fmt.Sprintf("Value: %d", sentMsg.Dice.Value))
-		m.ReplyParameters.MessageID = sentMsg.MessageID
-		o.bot.Send(m)
 	}
+	m := tgbotapi.NewMessage(inputMessage.Chat.ID, fmt.Sprintf("Value: %d", sentMsg.Dice.Value))
+	m.ReplyParameters.MessageID = sentMsg.MessageID
+	o.bot.Send(m) // nolint
 	// fmt.Printf("Message sent successfully: %+v", sentMsg)
 }

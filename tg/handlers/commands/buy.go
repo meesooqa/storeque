@@ -11,10 +11,12 @@ import (
 	"github.com/meesooqa/storeque/common/lang"
 )
 
+// BuyHandler handles the /buy command in the Telegram bot
 type BuyHandler struct {
 	BaseHandler
 }
 
+// NewBuyHandler creates a new instance of BuyHandler with the provided app dependencies and bot API
 func NewBuyHandler(appDeps app.App, bot *tgbotapi.BotAPI) *BuyHandler {
 	return &BuyHandler{
 		BaseHandler{
@@ -24,17 +26,18 @@ func NewBuyHandler(appDeps app.App, bot *tgbotapi.BotAPI) *BuyHandler {
 	}
 }
 
-func (o BuyHandler) GetName() string {
+// GetName returns the name of the command handler
+func (o *BuyHandler) GetName() string {
 	return "buy"
 }
 
-func (o BuyHandler) GetDescription(loc lang.Localization) string {
+// GetDescription returns the localized description of the command handler
+func (o *BuyHandler) GetDescription(loc lang.Localization) string {
 	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
+// Handle processes the /buy command, creating an invoice for a product
 func (o *BuyHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
-	// TODO o.appDeps.Lang.Localize()
-	// TODO promocode
 	product := struct {
 		ID          string
 		Name        string
@@ -57,7 +60,7 @@ func (o *BuyHandler) Handle(ctx context.Context, loc lang.Localization, inputMes
 		inputMessage.Chat.ID,
 		product.Name,
 		product.Description,
-		fmt.Sprintf("product:%d", product.ID),
+		fmt.Sprintf("product:%s", product.ID),
 		"",             // Pass an empty string for payments in Telegram Stars
 		startParameter, // fmt.Sprintf("%d", inputMessage.From.ID),
 		"XTR",
@@ -67,7 +70,7 @@ func (o *BuyHandler) Handle(ctx context.Context, loc lang.Localization, inputMes
 	sentInvoice, err := o.bot.Send(invoice)
 	if err != nil {
 		msg := tgbotapi.NewMessage(inputMessage.Chat.ID, fmt.Sprintf("Ошибка при создании счета для оплаты: %v", err))
-		o.bot.Send(msg)
+		o.bot.Send(msg) // nolint
 		return
 	}
 	fmt.Printf("Invoice sent successfully: %+v", sentInvoice)

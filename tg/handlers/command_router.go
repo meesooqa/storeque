@@ -12,6 +12,7 @@ import (
 	"github.com/meesooqa/storeque/tg/handlers/commands"
 )
 
+// CommandRouter routes commands to their respective handlers
 type CommandRouter struct {
 	list           map[string]commands.CommandHandler
 	defaultHandler commands.CommandHandler
@@ -21,6 +22,7 @@ type CommandRouter struct {
 	roleService roleservice.RoleService
 }
 
+// NewCommandRouter creates a new CommandRouter with the provided dependencies
 func NewCommandRouter(appDeps app.App, bot *tgbotapi.BotAPI, locService locservice.LocService, userService userservice.UserService, roleService roleservice.RoleService) *CommandRouter {
 	return &CommandRouter{
 		list:           commands.GetAll(appDeps, bot, userService),
@@ -32,35 +34,36 @@ func NewCommandRouter(appDeps app.App, bot *tgbotapi.BotAPI, locService locservi
 	}
 }
 
-func (this *CommandRouter) Route(ctx context.Context, update *tgbotapi.Update) error {
+// Route routes the incoming update to the appropriate command handler
+func (o *CommandRouter) Route(ctx context.Context, update *tgbotapi.Update) error {
 	if update.Message == nil || update.Message.Text == "" {
 		return nil
 	}
 
-	chatID := this.chatIdFromUpdate(update)
-	loc := this.locService.GetLoc(ctx, chatID)
+	chatID := o.chatIDFromUpdate(update)
+	loc := o.locService.GetLoc(ctx, chatID)
 
 	name := update.Message.Command()
 	if name == "" {
 		// not a command
-		this.defaultHandler.Handle(ctx, loc, update.Message)
+		o.defaultHandler.Handle(ctx, loc, update.Message)
 		return nil
 	}
 
-	handler, exists := this.list[name]
+	handler, exists := o.list[name]
 	if !exists {
 		// command not found
-		this.defaultHandler.Handle(ctx, loc, update.Message)
+		o.defaultHandler.Handle(ctx, loc, update.Message)
 		return nil
 	}
 
-	userSettings, err := this.userService.GetUserSettings(ctx, chatID)
+	userSettings, err := o.userService.GetUserSettings(ctx, chatID)
 	if err != nil {
 		return err
 	}
-	allowedCommands := this.roleService.GetAllowedCommands(ctx, userSettings.Role.Code)
+	allowedCommands := o.roleService.GetAllowedCommands(ctx, userSettings.Role.Code)
 
-	if this.roleService.IsCommandAllowed(ctx, userSettings.Role.Code, name) {
+	if o.roleService.IsCommandAllowed(ctx, userSettings.Role.Code, name) {
 		if name == "help" {
 			handler.(*commands.HelpHandler).SetAllowedCommands(allowedCommands)
 		}
@@ -71,8 +74,9 @@ func (this *CommandRouter) Route(ctx context.Context, update *tgbotapi.Update) e
 	return nil
 }
 
-func (this *CommandRouter) chatIdFromUpdate(update *tgbotapi.Update) int64 {
-	var chatID int64 = 0
+// chatIDFromUpdate extracts the chat ID from the update
+func (o *CommandRouter) chatIDFromUpdate(update *tgbotapi.Update) int64 {
+	var chatID int64
 	if update.CallbackQuery != nil {
 		chatID = update.CallbackQuery.From.ID
 	}

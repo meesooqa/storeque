@@ -10,6 +10,7 @@ import (
 	"github.com/meesooqa/storeque/tg/handlers/middleware"
 )
 
+// TelegramHandler is a handler for Telegram
 type TelegramHandler struct {
 	appDeps app.App
 	bot     *tgbotapi.BotAPI
@@ -20,6 +21,7 @@ type TelegramHandler struct {
 	callbackRouter *CallbackRouter
 }
 
+// NewTelegramHandler creates a new TelegramHandler
 func NewTelegramHandler(appDeps app.App, bot *tgbotapi.BotAPI, updateMiddleware []middleware.UpdatePreHandler, commandRouter *CommandRouter, callbackRouter *CallbackRouter) *TelegramHandler {
 	return &TelegramHandler{
 		appDeps:           appDeps,
@@ -30,29 +32,30 @@ func NewTelegramHandler(appDeps app.App, bot *tgbotapi.BotAPI, updateMiddleware 
 	}
 }
 
-func (this TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.Update) {
+// HandleUpdate handles incoming updates from Telegram
+func (o *TelegramHandler) HandleUpdate(ctx context.Context, update *tgbotapi.Update) {
 	defer func() {
 		if panicValue := recover(); panicValue != nil {
-			this.appDeps.Logger().Info("recovered from panic", slog.Any("panicValue", panicValue))
+			o.appDeps.Logger().Info("recovered from panic", slog.Any("panicValue", panicValue))
 		}
 	}()
 
 	var err error
 
-	for _, ph := range this.updatePreHandlers {
+	for _, ph := range o.updatePreHandlers {
 		if err = ph.Execute(ctx, update); err != nil {
-			this.appDeps.Logger().Error("updateMiddleware", slog.Any("error", err), slog.Any("updatePreHandler", ph))
+			o.appDeps.Logger().Error("updateMiddleware", slog.Any("error", err), slog.Any("updatePreHandler", ph))
 			return
 		}
 	}
 
-	if err = this.callbackRouter.Route(ctx, update); err != nil {
-		this.appDeps.Logger().Error("callbackRouter", slog.Any("error", err))
+	if err = o.callbackRouter.Route(ctx, update); err != nil {
+		o.appDeps.Logger().Error("callbackRouter", slog.Any("error", err))
 		return
 	}
 
-	if err = this.commandRouter.Route(ctx, update); err != nil {
-		this.appDeps.Logger().Error("commandRouter", slog.Any("error", err))
+	if err = o.commandRouter.Route(ctx, update); err != nil {
+		o.appDeps.Logger().Error("commandRouter", slog.Any("error", err))
 		return
 	}
 

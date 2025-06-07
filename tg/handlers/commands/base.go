@@ -10,19 +10,20 @@ import (
 	"github.com/meesooqa/storeque/service/userservice"
 )
 
+// CommandHandler is an interface for handling commands in Telegram bot
 type CommandHandler interface {
 	Handle(context.Context, lang.Localization, *tgbotapi.Message)
 	GetName() string
 	GetDescription(loc lang.Localization) string
 }
 
+// BaseHandler is a base struct for command handlers, providing common dependencies
 type BaseHandler struct {
-	bot     *tgbotapi.BotAPI
-	loc     lang.Localization
 	appDeps app.App
+	bot     *tgbotapi.BotAPI
 }
 
-// GetAll returns list of all commands
+// GetAll returns a map of all command handlers, keyed by their command name
 func GetAll(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) map[string]CommandHandler {
 	help := NewHelpHandler(appDeps, bot)
 	list := []CommandHandler{

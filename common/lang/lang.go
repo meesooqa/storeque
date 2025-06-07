@@ -6,14 +6,9 @@ import (
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
+
+	"github.com/meesooqa/storeque/tg"
 )
-
-var moduleRegistrators []func(*i18n.Bundle)
-
-// RegisterModuleTranslations registers a function that will be called to register translations for a specific module
-func RegisterModuleTranslations(reg func(*i18n.Bundle)) {
-	moduleRegistrators = append(moduleRegistrators, reg)
-}
 
 // UserLang implements the Localization interface for a specific user language
 type UserLang struct {
@@ -26,9 +21,9 @@ type UserLang struct {
 func NewBundle() *i18n.Bundle {
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
-	for _, reg := range moduleRegistrators {
-		reg(bundle)
-	}
+
+	_ = tg.LoadLocales(bundle)
+
 	return bundle
 }
 

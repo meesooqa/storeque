@@ -12,11 +12,13 @@ import (
 	"github.com/meesooqa/storeque/service/userservice"
 )
 
+// SettingsHandler handles the /settings command in Telegram.
 type SettingsHandler struct {
 	BaseHandler
 	userService userservice.UserService
 }
 
+// NewSettingsHandler creates a new instance of SettingsHandler.
 func NewSettingsHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService userservice.UserService) *SettingsHandler {
 	return &SettingsHandler{
 		BaseHandler: BaseHandler{
@@ -27,21 +29,24 @@ func NewSettingsHandler(appDeps app.App, bot *tgbotapi.BotAPI, userService users
 	}
 }
 
-func (this SettingsHandler) GetName() string {
+// GetName returns the name of the command handler.
+func (o *SettingsHandler) GetName() string {
 	return "settings"
 }
 
-func (this SettingsHandler) GetDescription(loc lang.Localization) string {
-	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", this.GetName()), nil)
+// GetDescription returns the localized description of the command handler
+func (o *SettingsHandler) GetDescription(loc lang.Localization) string {
+	return loc.Localize(fmt.Sprintf("tg.cmd.%s.description", o.GetName()), nil)
 }
 
-func (this SettingsHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
+// Handle processes the /settings command.
+func (o *SettingsHandler) Handle(ctx context.Context, loc lang.Localization, inputMessage *tgbotapi.Message) {
 	chatID := inputMessage.Chat.ID
 
-	userSettings, err := this.userService.GetUserSettings(ctx, chatID)
+	userSettings, err := o.userService.GetUserSettings(ctx, chatID)
 	if err != nil {
-		this.appDeps.Logger().Error("cmdSettings-GetUserSettings", slog.Any("error", err))
-		this.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.error.getusersettings", nil)))
+		o.appDeps.Logger().Error("cmdSettings-GetUserSettings", slog.Any("error", err))
+		o.bot.Send(tgbotapi.NewMessage(chatID, loc.Localize("tg.error.getusersettings", nil))) // nolint
 		return
 	}
 
@@ -51,5 +56,5 @@ func (this SettingsHandler) Handle(ctx context.Context, loc lang.Localization, i
 
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, text)
 	msg.ParseMode = "Markdown"
-	this.bot.Send(msg)
+	o.bot.Send(msg) // nolint
 }
