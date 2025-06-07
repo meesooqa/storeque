@@ -2,10 +2,12 @@ package roleservice
 
 import "context"
 
+// Service implements the RoleService interface
 type Service struct {
 	roleCommands map[string][]string
 }
 
+// NewService creates a new instance of Service with predefined role commands
 func NewService() *Service {
 	return &Service{
 		roleCommands: map[string][]string{
@@ -15,8 +17,9 @@ func NewService() *Service {
 	}
 }
 
-func (this Service) IsCommandAllowed(ctx context.Context, role string, command string) bool {
-	allowedCommands := this.GetAllowedCommands(ctx, role)
+// IsCommandAllowed checks if a command is allowed for a given role
+func (o Service) IsCommandAllowed(ctx context.Context, role, command string) bool {
+	allowedCommands := o.GetAllowedCommands(ctx, role)
 	if allowedCommands == nil {
 		return false
 	}
@@ -28,10 +31,10 @@ func (this Service) IsCommandAllowed(ctx context.Context, role string, command s
 	return false
 }
 
-func (this Service) GetAllowedCommands(ctx context.Context, role string) []string {
-	allowedCommands, exists := this.roleCommands[role]
+// GetAllowedCommands retrieves the list of commands allowed for a given role
+func (o Service) GetAllowedCommands(_ context.Context, role string) []string {
+	allowedCommands, exists := o.roleCommands[role]
 	if !exists {
-		//return []string{}
 		return nil
 	}
 	return allowedCommands
