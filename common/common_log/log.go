@@ -47,7 +47,7 @@ func (o *FileLoggerProvider) GetLogger() (*slog.Logger, func()) {
 	}
 	logger := slog.New(getLogHandler(o.conf, file, &slog.HandlerOptions{Level: o.conf.Level}))
 	cleanup := func() {
-		file.Close()
+		file.Close() // nolint
 	}
 	return logger, cleanup
 }
