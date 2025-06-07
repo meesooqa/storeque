@@ -41,7 +41,7 @@ func NewFileLoggerProvider(conf *config.LogConfig) *FileLoggerProvider {
 // logger, cleanup := loggerProvider.GetLogger()
 // defer cleanup()
 func (o *FileLoggerProvider) GetLogger() (*slog.Logger, func()) {
-	file, err := os.OpenFile(o.conf.Path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(o.conf.Path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
 		log.Fatalf("failed to open log file: %v", err)
 	}
