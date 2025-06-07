@@ -1,4 +1,4 @@
-package db_provider
+package provider
 
 import (
 	"database/sql"
@@ -6,27 +6,27 @@ import (
 	"os"
 	"strconv"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // Import the PostgreSQL driver
 )
 
+// DefaultDBProvider is a default implementation of the DBProvider interface
 type DefaultDBProvider struct {
 	db *sql.DB
 }
 
+// NewDefaultDBProvider creates a new instance of DefaultDBProvider
 func NewDefaultDBProvider() *DefaultDBProvider {
 	return &DefaultDBProvider{}
 }
 
+// Connect establishes a connection to the PostgreSQL database using environment variables
 func (o *DefaultDBProvider) Connect() (*sql.DB, error) {
 	var err error
 	if o.db != nil {
-		o.db.Close()
+		o.db.Close() // nolint
 		o.db = nil
 	}
 	o.db, err = sql.Open("postgres", o.constructDsn())
-	//o.db.SetConnMaxLifetime(connLifetime)
-	//o.db.SetMaxIdleConns(idleConns)
-	//o.db.SetMaxOpenConns(openConns)
 	if err != nil {
 		return nil, err
 	}

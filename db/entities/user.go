@@ -6,6 +6,7 @@ import (
 	"github.com/meesooqa/storeque/common/domain"
 )
 
+// User represents a user in the database
 type User struct {
 	ID         int64     `db:"id"`
 	CreatedAt  time.Time `db:"created_at"`
@@ -17,13 +18,16 @@ type User struct {
 	LastName   string    `db:"last_name"`
 }
 
+// UserAdapter converts between User domain model and User database entity
 type UserAdapter struct{}
 
+// NewUserAdapter creates a new instance of UserAdapter
 func NewUserAdapter() *UserAdapter {
 	return &UserAdapter{}
 }
 
-func (a *UserAdapter) ToDomain(item *User) *domain.User {
+// ToDomain converts a User database entity to a User domain model
+func (o *UserAdapter) ToDomain(item *User) *domain.User {
 	return &domain.User{
 		ID:         item.ID,
 		TelegramID: item.TelegramID,
@@ -34,7 +38,8 @@ func (a *UserAdapter) ToDomain(item *User) *domain.User {
 	}
 }
 
-func (a *UserAdapter) FromDomain(item *domain.User) *User {
+// FromDomain converts a User domain model to a User database entity
+func (o *UserAdapter) FromDomain(item *domain.User) *User {
 	return &User{
 		ID:         item.ID,
 		TelegramID: item.TelegramID,

@@ -8,12 +8,14 @@ import (
 	"github.com/meesooqa/storeque/db/entities"
 )
 
+// UserRepository implements the domain.UserRepository interface
 type UserRepository struct {
 	db                  *sql.DB
 	adapter             *entities.UserAdapter
 	userSettingsAdapter *entities.UserSettingsAdapter
 }
 
+// NewUserRepository creates a new instance of UserRepository
 func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{
 		db:                  db,
@@ -22,6 +24,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	}
 }
 
+// FindByChatID retrieves a user by their chat ID
 func (o *UserRepository) FindByChatID(ctx context.Context, chatID int64) (*domain.User, error) {
 	const query = `
         SELECT *
@@ -39,6 +42,7 @@ func (o *UserRepository) FindByChatID(ctx context.Context, chatID int64) (*domai
 	return o.adapter.ToDomain(item), nil
 }
 
+// Create inserts a new user into the database
 func (o *UserRepository) Create(ctx context.Context, item *domain.User) error {
 	const query = `
         INSERT INTO users (chat_id, username, first_name, last_name)
@@ -50,6 +54,7 @@ func (o *UserRepository) Create(ctx context.Context, item *domain.User) error {
 		Scan(&item.ID)
 }
 
+// Update updates an existing user in the database
 func (o *UserRepository) Update(ctx context.Context, item *domain.User) error {
 	const query = `
         UPDATE users
@@ -69,6 +74,7 @@ func (o *UserRepository) Update(ctx context.Context, item *domain.User) error {
 	return nil
 }
 
+// Delete removes a user from the database by their ID
 func (o *UserRepository) Delete(ctx context.Context, id int64) error {
 	const query = `
         DELETE FROM users
@@ -84,6 +90,7 @@ func (o *UserRepository) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
+// CreateSettings creates a new user settings entry in the database
 func (o *UserRepository) CreateSettings(ctx context.Context, userID int64) error {
 	const query = `
         INSERT INTO user_settings (user_id)
@@ -93,6 +100,7 @@ func (o *UserRepository) CreateSettings(ctx context.Context, userID int64) error
 	return err
 }
 
+// GetSettings retrieves user settings by user ID
 func (o *UserRepository) GetSettings(ctx context.Context, userID int64) (*domain.UserSettings, error) {
 	const query = `
         SELECT us.*, r.code AS role_code

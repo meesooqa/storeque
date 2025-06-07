@@ -11,7 +11,7 @@ import (
 	"github.com/meesooqa/storeque/common/applog"
 	"github.com/meesooqa/storeque/common/config"
 	"github.com/meesooqa/storeque/common/lang"
-	"github.com/meesooqa/storeque/db/db_provider"
+	"github.com/meesooqa/storeque/db/provider"
 
 	// Load lang phrases
 	_ "github.com/meesooqa/storeque/tg"
@@ -21,7 +21,7 @@ type appDeps struct {
 	config     *config.AppConfig
 	logger     *slog.Logger
 	langBundle *i18n.Bundle
-	dbProvider db_provider.DBProvider
+	dbProvider provider.DBProvider
 }
 
 var (
@@ -51,7 +51,7 @@ func GetInstance() App {
 			config:     conf,
 			logger:     logger,
 			langBundle: lang.NewBundle(),
-			dbProvider: db_provider.NewDefaultDBProvider(),
+			dbProvider: provider.NewDefaultDBProvider(),
 		}
 	})
 	return app
@@ -69,6 +69,6 @@ func (o *appDeps) LangBundle() *i18n.Bundle {
 	return o.langBundle
 }
 
-func (o *appDeps) DBProvider() db_provider.DBProvider {
+func (o *appDeps) DBProvider() provider.DBProvider {
 	return o.dbProvider
 }

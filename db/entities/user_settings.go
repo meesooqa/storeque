@@ -6,6 +6,7 @@ import (
 	"github.com/meesooqa/storeque/common/domain"
 )
 
+// UserSettings represents user settings in the database
 type UserSettings struct {
 	UserID    int64     `db:"user_id"`
 	CreatedAt time.Time `db:"created_at"`
@@ -15,13 +16,16 @@ type UserSettings struct {
 	Role      string    `db:"role_code"` // SELECT us.*, r.code AS role_code
 }
 
+// UserSettingsAdapter converts between UserSettings domain model and UserSettings database entity
 type UserSettingsAdapter struct{}
 
+// NewUserSettingsAdapter creates a new instance of UserSettingsAdapter
 func NewUserSettingsAdapter() *UserSettingsAdapter {
 	return &UserSettingsAdapter{}
 }
 
-func (a *UserSettingsAdapter) ToDomain(item *UserSettings) *domain.UserSettings {
+// ToDomain converts a UserSettings database entity to a UserSettings domain model
+func (o *UserSettingsAdapter) ToDomain(item *UserSettings) *domain.UserSettings {
 	return &domain.UserSettings{
 		UserID: item.UserID,
 		RoleID: item.RoleID,
@@ -33,7 +37,8 @@ func (a *UserSettingsAdapter) ToDomain(item *UserSettings) *domain.UserSettings 
 	}
 }
 
-func (a *UserSettingsAdapter) FromDomain(item *domain.UserSettings) *UserSettings {
+// FromDomain converts a UserSettings domain model to a UserSettings database entity
+func (o *UserSettingsAdapter) FromDomain(item *domain.UserSettings) *UserSettings {
 	return &UserSettings{
 		UserID: item.UserID,
 		RoleID: item.RoleID,
